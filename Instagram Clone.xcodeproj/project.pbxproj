@@ -16,6 +16,12 @@
 		DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571F0221032D0005EDFFE /* LoginVC.swift */; };
 		DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571F1221032D0005EDFFE /* SignUpVC.swift */; };
 		DC7571F8221033B9005EDFFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */; };
+		DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B52214420A0004D591 /* MainTabVC.swift */; };
+		DCC346B8221449030004D591 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B7221449030004D591 /* FeedVC.swift */; };
+		DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B92214491F0004D591 /* SearchVC.swift */; };
+		DCC346BC221449420004D591 /* UploadPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BB221449420004D591 /* UploadPostVC.swift */; };
+		DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BD2214495A0004D591 /* NotificationVC.swift */; };
+		DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BF2214496D0004D591 /* UserProfileVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +37,12 @@
 		DC7571F0221032D0005EDFFE /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		DC7571F1221032D0005EDFFE /* SignUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		DCC346B52214420A0004D591 /* MainTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabVC.swift; sourceTree = "<group>"; };
+		DCC346B7221449030004D591 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
+		DCC346B92214491F0004D591 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
+		DCC346BB221449420004D591 /* UploadPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostVC.swift; sourceTree = "<group>"; };
+		DCC346BD2214495A0004D591 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
+		DCC346BF2214496D0004D591 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
 		F92EC2E8C0F937920FEC6BD5 /* Pods-Instagram Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -111,6 +123,12 @@
 			children = (
 				DC7571F0221032D0005EDFFE /* LoginVC.swift */,
 				DC7571F1221032D0005EDFFE /* SignUpVC.swift */,
+				DCC346B52214420A0004D591 /* MainTabVC.swift */,
+				DCC346B7221449030004D591 /* FeedVC.swift */,
+				DCC346B92214491F0004D591 /* SearchVC.swift */,
+				DCC346BB221449420004D591 /* UploadPostVC.swift */,
+				DCC346BD2214495A0004D591 /* NotificationVC.swift */,
+				DCC346BF2214496D0004D591 /* UserProfileVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -256,10 +274,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCC346B8221449030004D591 /* FeedVC.swift in Sources */,
+				DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */,
+				DCC346BC221449420004D591 /* UploadPostVC.swift in Sources */,
+				DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
 				DC7571F4221032D0005EDFFE /* Extension.swift in Sources */,
+				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,
+				DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

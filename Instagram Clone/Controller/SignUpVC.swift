@@ -13,6 +13,8 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
     
     var imageSelected = false
     
+    // MARK: - UI элементы
+    
     let plusPhotoButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "plus_photo")?.withRenderingMode(.alwaysOriginal), for: .normal)
@@ -103,6 +105,8 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         configureViewComponents()
     }
     
+    // MARK: - Настройка внешнего вида окна
+    
     /// Расставляем все необходимые UI компоненты на экране
     private func configureViewComponents(){
         
@@ -187,7 +191,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                         
                         print("Everythings Okay")
 
-                        self.dismiss(animated: true, completion: nil)
+//                        self.dismiss(animated: true, completion: nil)
                     })
                     
                 })
@@ -197,18 +201,6 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             //Если все хорошо
             print("Пользователь создан")
         }
-    }
-    
-    /// Проверка корректности введенных данных
-    @objc func dataValidation() {
-        guard emailTextField.hasText, passwordTextField.hasText, fullNameTextField.hasText, userNameTextField.hasText, imageSelected else {
-            signUpButton.isEnabled = false
-            signUpButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
-            return
-        }
-        
-        signUpButton.isEnabled = true
-        signUpButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
     }
     
     /// Нажата кнопка добавить фото пользователя
@@ -222,6 +214,22 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         self.present(imagePicker, animated: true, completion: nil)
         
     }
+    
+    // MARK: - Вспомогательные методы
+    
+    /// Проверка корректности введенных данных
+    @objc func dataValidation() {
+        guard emailTextField.hasText, passwordTextField.hasText, fullNameTextField.hasText, userNameTextField.hasText, imageSelected else {
+            signUpButton.isEnabled = false
+            signUpButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
+            return
+        }
+        
+        signUpButton.isEnabled = true
+        signUpButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+    }
+    
+
     
     // MARK: - UIImagePickerControllerDelegate
     
