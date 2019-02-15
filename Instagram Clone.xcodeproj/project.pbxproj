@@ -12,7 +12,7 @@
 		DC7571E122103267005EDFFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571DF22103267005EDFFE /* Main.storyboard */; };
 		DC7571E322103268005EDFFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E222103268005EDFFE /* Assets.xcassets */; };
 		DC7571E622103268005EDFFE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E422103268005EDFFE /* LaunchScreen.storyboard */; };
-		DC7571F4221032D0005EDFFE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571EE221032D0005EDFFE /* Extension.swift */; };
+		DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571EE221032D0005EDFFE /* UIView-Extension.swift */; };
 		DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571F0221032D0005EDFFE /* LoginVC.swift */; };
 		DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571F1221032D0005EDFFE /* SignUpVC.swift */; };
 		DC7571F8221033B9005EDFFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */; };
@@ -22,6 +22,9 @@
 		DCC346BC221449420004D591 /* UploadPostVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BB221449420004D591 /* UploadPostVC.swift */; };
 		DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BD2214495A0004D591 /* NotificationVC.swift */; };
 		DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346BF2214496D0004D591 /* UserProfileVC.swift */; };
+		DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346C722145DB30004D591 /* UserProfileHeader.swift */; };
+		DCC346CA2216E6710004D591 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346C92216E6710004D591 /* User.swift */; };
+		DCC346CC2216EE450004D591 /* UIImageView-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346CB2216EE450004D591 /* UIImageView-Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,7 +36,7 @@
 		DC7571E222103268005EDFFE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DC7571E522103268005EDFFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC7571E722103268005EDFFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		DC7571EE221032D0005EDFFE /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		DC7571EE221032D0005EDFFE /* UIView-Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView-Extension.swift"; sourceTree = "<group>"; };
 		DC7571F0221032D0005EDFFE /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		DC7571F1221032D0005EDFFE /* SignUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -43,6 +46,9 @@
 		DCC346BB221449420004D591 /* UploadPostVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadPostVC.swift; sourceTree = "<group>"; };
 		DCC346BD2214495A0004D591 /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		DCC346BF2214496D0004D591 /* UserProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileVC.swift; sourceTree = "<group>"; };
+		DCC346C722145DB30004D591 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
+		DCC346C92216E6710004D591 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DCC346CB2216EE450004D591 /* UIImageView-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView-Extension.swift"; sourceTree = "<group>"; };
 		F92EC2E8C0F937920FEC6BD5 /* Pods-Instagram Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,7 +119,8 @@
 		DC7571ED221032D0005EDFFE /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				DC7571EE221032D0005EDFFE /* Extension.swift */,
+				DC7571EE221032D0005EDFFE /* UIView-Extension.swift */,
+				DCC346CB2216EE450004D591 /* UIImageView-Extension.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -121,14 +128,13 @@
 		DC7571EF221032D0005EDFFE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				DC7571F0221032D0005EDFFE /* LoginVC.swift */,
-				DC7571F1221032D0005EDFFE /* SignUpVC.swift */,
+				DCC346C1221459260004D591 /* Login */,
+				DCC346C2221459330004D591 /* Feed */,
+				DCC346C32214593A0004D591 /* Search */,
+				DCC346C4221459410004D591 /* UploadPost */,
+				DCC346C52214594B0004D591 /* Notifications */,
+				DCC346C6221459550004D591 /* UserProfile */,
 				DCC346B52214420A0004D591 /* MainTabVC.swift */,
-				DCC346B7221449030004D591 /* FeedVC.swift */,
-				DCC346B92214491F0004D591 /* SearchVC.swift */,
-				DCC346BB221449420004D591 /* UploadPostVC.swift */,
-				DCC346BD2214495A0004D591 /* NotificationVC.swift */,
-				DCC346BF2214496D0004D591 /* UserProfileVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -136,6 +142,7 @@
 		DC7571F2221032D0005EDFFE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DCC346C92216E6710004D591 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -143,8 +150,58 @@
 		DC7571F3221032D0005EDFFE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				DCC346C722145DB30004D591 /* UserProfileHeader.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		DCC346C1221459260004D591 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				DC7571F0221032D0005EDFFE /* LoginVC.swift */,
+				DC7571F1221032D0005EDFFE /* SignUpVC.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		DCC346C2221459330004D591 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				DCC346B7221449030004D591 /* FeedVC.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
+		DCC346C32214593A0004D591 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				DCC346B92214491F0004D591 /* SearchVC.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		DCC346C4221459410004D591 /* UploadPost */ = {
+			isa = PBXGroup;
+			children = (
+				DCC346BB221449420004D591 /* UploadPostVC.swift */,
+			);
+			path = UploadPost;
+			sourceTree = "<group>";
+		};
+		DCC346C52214594B0004D591 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				DCC346BD2214495A0004D591 /* NotificationVC.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		DCC346C6221459550004D591 /* UserProfile */ = {
+			isa = PBXGroup;
+			children = (
+				DCC346BF2214496D0004D591 /* UserProfileVC.swift */,
+			);
+			path = UserProfile;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,13 +331,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCC346CC2216EE450004D591 /* UIImageView-Extension.swift in Sources */,
+				DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */,
 				DCC346B8221449030004D591 /* FeedVC.swift in Sources */,
 				DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */,
 				DCC346BC221449420004D591 /* UploadPostVC.swift in Sources */,
 				DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
-				DC7571F4221032D0005EDFFE /* Extension.swift in Sources */,
+				DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */,
+				DCC346CA2216E6710004D591 /* User.swift in Sources */,
 				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,
 				DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */,

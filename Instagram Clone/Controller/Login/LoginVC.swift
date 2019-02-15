@@ -34,6 +34,7 @@ class LoginVC: UIViewController {
         textField.borderStyle = .roundedRect
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.autocapitalizationType = .none
+        textField.keyboardType = .emailAddress
         textField.text = "tonystark@mail.ru"
         
         textField.addTarget(self, action: #selector(dataValidation), for: .editingChanged)

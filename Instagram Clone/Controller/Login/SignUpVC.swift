@@ -31,6 +31,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         textField.borderStyle = .roundedRect
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.autocapitalizationType = .none
+        textField.keyboardType = .emailAddress
         textField.addTarget(self, action: #selector(dataValidation), for: .editingChanged)
         return textField
     }()
