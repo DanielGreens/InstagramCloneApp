@@ -7,15 +7,23 @@
 //
 
 import UIKit
+import Firebase
 
 class UserProfileHeader: UICollectionViewCell {
+    
+    // MARK: - Свойства
+    
+    var delegate: UserProfileHeaderDelegate?
     
     var user: User? {
         // didSet вызывается сразу после того как значение user инициализировано
         didSet {
-            nameLabel.text = user?.name
+            guard let user = user else {return}
             
-            guard let profileImageURL = user?.profileImageURL else {return}
+            configureEditOrFollowButton()
+            configureUserStats(userID: user.userID)
+            nameLabel.text = user.name
+            guard let profileImageURL = user.profileImageURL else {return}
             profileImageView.loadImage(with: profileImageURL)
         }
     }
@@ -52,40 +60,42 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     ///Количество подписчиков пользователя
-    let folowersLabel: UILabel = {
+    lazy var folowersLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "6\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "подписчики", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        label.attributedText = attributedText
-        
+        //Добавляем нажатие на надпись
+        let followerTap = UITapGestureRecognizer(target: self, action: #selector(handleTapFollowersLabel))
+        followerTap.numberOfTapsRequired = 1
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(followerTap)
         return label
     }()
     
     ///Количество подписок пользователя
-    let folowLabel: UILabel = {
+    lazy var folowLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "7\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "подписки", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        label.attributedText = attributedText
-        
+        //Добавляем нажатие на надпись
+        let followTap = UITapGestureRecognizer(target: self, action: #selector(handleTapFollowLabel))
+        followTap.numberOfTapsRequired = 1
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(followTap)
         return label
     }()
     
     ///Кнопка редактирования профиля
-    let editProfileButton: UIButton = {
+    lazy var editProfileOrFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Редактировать профиль", for: .normal)
+        button.setTitle("Загрузка...", for: .normal)
         button.layer.cornerRadius = 5
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.black, for: .normal)
+        //Если мы не сделаем кнопку как lazy, то данную строчку нужно перенести в метот init, иначе нажатие на кнопку не будет работать. Мне кажется это происходит потому, что в данный момент self еще не создан, а соответственно мы не можем привязаться к нужному методу. А так как lazy вызовется уже тогда когда self будет создан, то привязка произойдет адекватно.
+        button.addTarget(self, action: #selector(handleTapEditProfileOrFollow), for: .touchUpInside)
         return button
     }()
     
@@ -111,6 +121,8 @@ class UserProfileHeader: UICollectionViewCell {
         button.tintColor = UIColor(white: 0, alpha: 0.2)
         return button
     }()
+    
+    // MARK: - Инициализаторы
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -147,13 +159,13 @@ class UserProfileHeader: UICollectionViewCell {
         stackView.setPosition(top: topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 12, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 50)
         
         //Устанавливаем кнопку редактирования профиля
-        addSubview(editProfileButton)
-        editProfileButton.setPosition(top: postLabel.bottomAnchor, left: postLabel.leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 12, paddingLeft: 8, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
+        addSubview(editProfileOrFollowButton)
+        editProfileOrFollowButton.setPosition(top: postLabel.bottomAnchor, left: postLabel.leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
         
         configureBottomToolBar()
     }
     
-    ///Настраиваем панель кнопок типа отображения публикаций
+    ///Настраиваем панель кнопок для типа отображения публикаций
     private func configureBottomToolBar(){
         
         //Разделитель панели сверху
@@ -179,4 +191,62 @@ class UserProfileHeader: UICollectionViewCell {
         
         bottomDividerView.setPosition(top: stackView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
     }
+    
+    ///Настраиваем вариант отображения кнопки. Либо это кнопка редактирвоания профиля, либо это кнопка подписаться или отписаться от профиля
+    private func configureEditOrFollowButton(){
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else {return}
+        guard let user = self.user else {return}
+        
+        if currentUserID == user.userID{
+            editProfileOrFollowButton.setTitle("Редактировать профиль", for: .normal)
+        }
+        else{
+            editProfileOrFollowButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+            editProfileOrFollowButton.setTitleColor(.white, for: .normal)
+            editProfileOrFollowButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+            user.checkIfUserIsFollowed { (isFollowed) in
+                if isFollowed{
+                    self.editProfileOrFollowButton.setTitle("Отписаться", for: .normal)
+                }
+                else{
+                    self.editProfileOrFollowButton.setTitle("Подписаться", for: .normal)
+                }
+            }
+        }
+    }
+    
+    ///Получаем информацию о кличестве постов, подписчиков и подписок пользователя
+    /// - Parameters:
+    ///     - userID: Идентификатор пользователя, для которого происходит поиск информации в БД
+    private func configureUserStats(userID: String) {
+        delegate?.setUserStats(for: self, with: userID)
+    }
+    
+    // MARK: - Обработчики нажатий
+    
+    @objc func handleTapEditProfileOrFollow() {
+        delegate?.handleTapEditProfileOrFollow(for: self)
+    }
+    
+    @objc func handleTapFollowersLabel() {
+        //Анимация нажатия
+        UIView.animate(withDuration: 0.25, delay: 0.0, options: [.allowUserInteraction, .autoreverse], animations: {
+            self.folowersLabel.alpha = 0.3
+        }) { (_) in
+            self.folowersLabel.alpha = 1
+        }
+        delegate?.handleTapFollowers(for: self)
+    }
+
+    @objc func handleTapFollowLabel() {
+        //Анимация нажатия
+        UIView.animate(withDuration: 0.25, delay: 0.0, options: [.allowUserInteraction, .autoreverse], animations: {
+            self.folowLabel.alpha = 0.3
+        }) { (_) in
+            self.folowLabel.alpha = 1
+        }
+        delegate?.handleTapFollow(for: self)
+    }
+    
 }

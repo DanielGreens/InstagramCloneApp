@@ -142,7 +142,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         guard let email = emailTextField.text else {return}
         guard let password = passwordTextField.text else {return}
         guard let fullName = fullNameTextField.text else {return}
-        guard let userName = userNameTextField.text else {return}
+        guard let userName = userNameTextField.text?.lowercased() else {return}
         
         Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
             //Обработка ошибок
@@ -190,9 +190,13 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     //Сохраняем данные пользователя в базу данных
                     Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
                         
-                        print("Everythings Okay")
+                        //В AppDelegate мы прописали что нашим стартовым экраном будет MainTabVC. Если при проверке авторизирован ли пользователь, окажется что он не авторизирован, то в стек контроллеров будет добавлен текущий контроллер LoginVC, а затем и SignUpVC. Здесь мы знаем, что регистраций нового пользователя прошла успешно, поэтому мы возвращаемся к главному экрану приложения MainTabVC
+                        guard let mainTabVC = UIApplication.shared.keyWindow?.rootViewController as? MainTabVC else {return}
+                        
+                        mainTabVC.configureViewController()
 
-//                        self.dismiss(animated: true, completion: nil)
+                        //Уничтожаем SignUpVC
+                        self.dismiss(animated: true, completion: nil)
                     })
                     
                 })

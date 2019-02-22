@@ -7,84 +7,91 @@
 //
 
 import UIKit
+import Firebase
+
+///Идентификатор ячейки таблицы
+private let reuseIdentifier = "SearchUserCell"
 
 class SearchVC: UITableViewController {
+    
+    // MARK: - Свойства
+    ///Все полученные из БД пользователи
+    var users = [User]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        //Регестрируем Ячейку на наш класс SearchUserCell
+        tableView.register(SearchUserCell.self, forCellReuseIdentifier: reuseIdentifier)
+        
+        //Настриваем раззделители ячеек, чтобы разделение начиналось когда заканчивается аватар пользователя
+        //64 слева, потому что размер аватарки 48, и плюс по 8 с двух краев для симметрии
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 64, bottom: 0, right: 0)
+        
+        congigureNavController()
+        
+        fetchUsers()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return users.count
     }
-
-    /*
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SearchUserCell
+        cell.user = users[indexPath.row]
+        
         return cell
     }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let user = users[indexPath.row]
+        
+        //Создаем страницу с пользователем на которого кликнули
+        let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+        
+        //Передаем данные о выбранном пользователе в UserProfileVC
+        userProfileVC.user = user
+        
+        navigationController?.pushViewController(userProfileVC, animated: true)
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    
+    // MARK: - Настройка внешнего вида окна
+    
+    ///Настраиваем панель навигации
+    private func congigureNavController() {
+        navigationItem.title = ""
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
+    
+    
+    // MARK: - Работа с Базой данных
+    
+    ///Загружает данные о пользователях из БД
+    private func fetchUsers() {
+        
+        USER_REF.observe(.childAdded) { (dataFromDB) in
+            //Этот блок вызывается для каждого пользователя
+            
+            guard let dictionary = dataFromDB.value as? Dictionary<String, AnyObject> else {return}
+            //Уникальный идентификатор пользователя
+            let uid = dataFromDB.key
+            
+            let user = User(uid: uid, dictionary: dictionary)
+            
+            self.users.append(user)
+            self.tableView.reloadData()
+        }
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
