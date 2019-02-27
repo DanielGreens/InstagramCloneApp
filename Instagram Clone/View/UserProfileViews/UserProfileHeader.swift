@@ -31,8 +31,8 @@ class UserProfileHeader: UICollectionViewCell {
     // MARK: - UI элементы
     
     ///Аватар пользователя
-    let profileImageView: UIImageView = {
-        let image = UIImageView()
+    let profileImageView: CustomImageView = {
+        let image = CustomImageView()
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.backgroundColor = .lightGray

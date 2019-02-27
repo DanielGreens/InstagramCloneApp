@@ -21,6 +21,23 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         checkIsUserLogIn()
     }
     
+    //Создаем анимацию появления ViewController для вкладки SelectImageVC
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        
+        let index = viewControllers?.index(of: viewController)
+        
+        if index == 2 {
+            let selectImageVC = SelectImageVC(collectionViewLayout: UICollectionViewFlowLayout())
+            let navController = UINavigationController(rootViewController: selectImageVC)
+            navController.navigationBar.tintColor = .black
+            
+            present(navController, animated: true, completion: nil)
+            
+            return false
+        }
+        return true
+    }
+    
     // MARK: - Настройка внешнего вида окна
     
     /// Настраиваем все страницы Таб бара на необходимые контроллеры представления
@@ -33,7 +50,7 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         let searchVC = constructNavController(unselectedImage: UIImage(named: "search_unselected")!, selectedImage: UIImage(named: "search_selected")!, rootViewController: SearchVC())
         
         //Страница добавления фотографии
-        let uploadPhotoVC = constructNavController(unselectedImage: UIImage(named: "plus_unselected")!, selectedImage: UIImage(named: "plus_unselected")!, rootViewController: UploadPostVC())
+        let selectImageVC = constructNavController(unselectedImage: UIImage(named: "plus_unselected")!, selectedImage: UIImage(named: "plus_unselected")!)
         
         //Страница уведомлений
         let notificationVC = constructNavController(unselectedImage: UIImage(named: "like_unselected")!, selectedImage: UIImage(named: "like_selected")!, rootViewController: NotificationVC())
@@ -42,7 +59,7 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         let userProfileVC = constructNavController(unselectedImage: UIImage(named: "profile_unselected")!, selectedImage: UIImage(named: "profile_selected")!, rootViewController: UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout()))
         
         //Добавляем созданные Контроллеры на ТАб бар
-        viewControllers = [feedVC, searchVC, uploadPhotoVC, notificationVC, userProfileVC]
+        viewControllers = [feedVC, searchVC, selectImageVC, notificationVC, userProfileVC]
         tabBar.tintColor = .black
     }
     

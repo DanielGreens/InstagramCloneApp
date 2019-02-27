@@ -10,9 +10,9 @@ import UIKit
 import Firebase
 
 ///Идентификатор ячейки коллекции
-private let reuseIdentifier = "Cell"
+private let reuseIdentifier = "UserPostCell"
 ///Идентификатор заголовка колекции для пользовательской информации
-private let headerIdenifier = "UserProfileHeader"
+private let headerIdentifier = "UserProfileHeader"
 
 ///Страница информации о пользователе
 class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
@@ -21,6 +21,8 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     ///Данные о пользователе
     var user: User?
+    ///Данные о постах пользователя
+    var posts = [Post]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,31 +30,30 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         self.collectionView.backgroundColor = .white
 
         //Регестрируем ячейки на соответствующие классы и присваиваем им уникальные идентификаторы
-        self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        self.collectionView.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdenifier)
+        self.collectionView!.register(UserPostCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        self.collectionView.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
 
         if user == nil {
             fetchUserData()
         }
+        
+        fetchUserPosts()
     }
 
     // MARK: - UICollectionViewDataSource
 
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
-        return 0
+        return posts.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         //Определяем заголовок в котором хранится информация о пользователе
-        let userProfileHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdenifier, for: indexPath) as! UserProfileHeader
+        let userProfileHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifier, for: indexPath) as! UserProfileHeader
         
         userProfileHeader.delegate = self
         
@@ -64,8 +65,9 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! UserPostCell
 
+        cell.post = posts[indexPath.item]
     
         return cell
     }
@@ -75,6 +77,20 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     //Создаем размер области где будет информация о пользователе
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 200)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let width = (view.frame.width - 2) / 3
+        
+        return CGSize(width: width, height: width)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
     }
  
     // MARK: - Работа с Базой данных
@@ -95,6 +111,41 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             
             self.navigationItem.title = self.user?.username
             self.collectionView.reloadData()
+        }
+    }
+    
+    ///Загружаем посты пользователя
+    private func fetchUserPosts() {
+        
+        var userID: String!
+        
+        if let user = self.user {
+            userID = user.userID
+        }
+        else {
+            userID = Auth.auth().currentUser?.uid
+        }
+        
+        //Создаем постоянного наблюдателя за обновлением данных. Если в БД добавится новый пост, данные обгновятся здесь автоматически
+        USER_POSTS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
+            
+            let postID = dataFromDB.key
+            
+            POSTS_REF.child(postID).observeSingleEvent(of: .value, with: { (data) in
+                
+                guard let dictionary = data.value as? Dictionary<String, AnyObject> else {return}
+                
+                let post = Post(postID: postID, dictionary: dictionary)
+                
+                self.posts.append(post)
+                
+                //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
+                self.posts.sort(by: { (post1, post2) -> Bool in
+                    return post1.creationDate > post2.creationDate
+                })
+                
+                self.collectionView.reloadData()
+            })
         }
     }
 }

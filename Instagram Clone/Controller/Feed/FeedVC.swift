@@ -20,16 +20,30 @@ class FeedVC: UICollectionViewController {
 
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.backgroundColor = .white
 
-        configureLogOutButton()
+        configureNavigationBar()
     }
     
     // MARK: - Настройка внешнего вида окна
     
     /// Настраивает кнопку LogOut
-    private func configureLogOutButton() {
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(handleTapLogOut))
+    private func configureNavigationBar() {
+
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "logout"), style: .plain, target: self, action: #selector(handleTapLogOut))
+        
+        //Лого Интсаграмма в центре
+        let imageView = UIImageView(image: UIImage(named: "Instagram_logo_black"))
+        imageView.contentMode = .scaleAspectFill
+        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 30, height: 30))
+        imageView.frame = titleView.bounds
+        titleView.addSubview(imageView)
+        self.navigationItem.titleView = titleView
+        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "send2"), style: .plain, target: self, action: #selector(handleTapSendMessage))
     }
+    
+    
 
     // MARK: - UICollectionViewDataSource
 
@@ -61,7 +75,7 @@ class FeedVC: UICollectionViewController {
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
         //Выйти из профиля
-        alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
+        alertController.addAction(UIAlertAction(title: "Выйти", style: .destructive, handler: { (_) in
             
             do{
                 try Auth.auth().signOut()
@@ -76,7 +90,11 @@ class FeedVC: UICollectionViewController {
         }))
         
         //Отменить выход из профиля
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
+    }
+    
+    @objc func handleTapSendMessage() {
+        
     }
 }

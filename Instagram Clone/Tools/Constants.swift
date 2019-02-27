@@ -19,6 +19,8 @@ let STORAGE_REF = Storage.storage().reference()
 
 /// Ссылка на хранилище пользовательских изображений
 let STORAGE_PROFILE_IMAGES_REF = STORAGE_REF.child("profile_images")
+/// Ссылка на хранилище пользовательских изображений
+let STORAGE_POST_IMAGES_REF = STORAGE_REF.child("post_images")
 
 
 // MARK: - Ссылки на необходимые таблицы в БД
@@ -30,3 +32,7 @@ let USER_REF = DB_REF.child("users")
 let USER_FOLLOWING_REF = DB_REF.child("user-following")
 /// Ссылка на таблицу подписчиков пользователя
 let USER_FOLLOWERS_REF = DB_REF.child("user-followers")
+/// Ссылка на таблицу данных о постах
+let POSTS_REF = DB_REF.child("posts")
+/// Ссылка на таблитцу постов пользователей
+let USER_POSTS_REF = DB_REF.child("user-posts")
