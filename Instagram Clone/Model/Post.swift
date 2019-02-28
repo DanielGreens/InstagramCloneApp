@@ -20,10 +20,14 @@ class Post {
     var creationDate: Date!
     ///Идентификатор поста
     var postID: String!
+    ///Информация о пользователе опубликовавшем этот пост
+    var user: User?
     
-    init(postID: String, dictionary: Dictionary<String, AnyObject>) {
+    init(postID: String, user: User, dictionary: Dictionary<String, AnyObject>) {
         
         self.postID = postID
+        
+        self.user = user
         
         if let description = dictionary["description"] as? String {
             self.description = description

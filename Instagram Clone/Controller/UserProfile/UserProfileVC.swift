@@ -72,6 +72,16 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let feedVC = FeedVC(collectionViewLayout: UICollectionViewFlowLayout())
+        
+        feedVC.viewSinglePost = true
+        feedVC.post = posts[indexPath.row]
+        
+        navigationController?.pushViewController(feedVC, animated: true)
+    }
+    
     // MARK: - UICollectionViewDelegateFlowLayout
     
     //Создаем размер области где будет информация о пользователе
@@ -131,11 +141,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             
             let postID = dataFromDB.key
             
-            POSTS_REF.child(postID).observeSingleEvent(of: .value, with: { (data) in
-                
-                guard let dictionary = data.value as? Dictionary<String, AnyObject> else {return}
-                
-                let post = Post(postID: postID, dictionary: dictionary)
+            Database.fetchPost(with: postID, completion: { (post) in
                 
                 self.posts.append(post)
                 

@@ -62,6 +62,13 @@ class User {
         //Добавляем для uid нового подписчика в структуру user-followers (Подписчики пользователей)
         USER_FOLLOWERS_REF.child(userID).updateChildValues([currentUserID: 1])
         
+        //Обновляем ленту новостей пользователя добавляя публикации новой подписки
+        USER_POSTS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
+            
+            let postID = dataFromDB.key
+            USER_FEED_REF.child(currentUserID).updateChildValues([postID : 1])
+        }
+        
     }
     
     ///Функция удаляет у текущего пользователя подписку, а пользователю на которого подписка была отменена, удаляет этого подписчика
@@ -78,6 +85,13 @@ class User {
         USER_FOLLOWING_REF.child(currentUid).child(userID).removeValue()
         //Удалчем у пользователя userID пользователя currentUid из подписчиков
         USER_FOLLOWERS_REF.child(userID).child(currentUid).removeValue()
+        
+        //Удаляем публикации пользователя от которого текущий пользователь отписался
+        USER_POSTS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
+            
+            let postID = dataFromDB.key
+            USER_FEED_REF.child(currentUid).child(postID).removeValue()
+        }
     }
     
     ///Проверяет подписан ли текущий пользователь на выбранного пользователя

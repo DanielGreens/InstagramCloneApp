@@ -27,6 +27,7 @@
 		DC7817A322242CC7006FAE47 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A222242CC7006FAE47 /* Post.swift */; };
 		DC7817A5222437C2006FAE47 /* UserPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A4222437C2006FAE47 /* UserPostCell.swift */; };
 		DC7817A7222442CA006FAE47 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A6222442CA006FAE47 /* CustomImageView.swift */; };
+		DC7817A92226C22F006FAE47 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A82226C22F006FAE47 /* FeedCell.swift */; };
 		DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B52214420A0004D591 /* MainTabVC.swift */; };
 		DCC346B8221449030004D591 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B7221449030004D591 /* FeedVC.swift */; };
 		DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B92214491F0004D591 /* SearchVC.swift */; };
@@ -62,6 +63,7 @@
 		DC7817A222242CC7006FAE47 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		DC7817A4222437C2006FAE47 /* UserPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostCell.swift; sourceTree = "<group>"; };
 		DC7817A6222442CA006FAE47 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
+		DC7817A82226C22F006FAE47 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
 		DCC346B52214420A0004D591 /* MainTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabVC.swift; sourceTree = "<group>"; };
 		DCC346B7221449030004D591 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		DCC346B92214491F0004D591 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
@@ -179,6 +181,7 @@
 				DC7817A02223FB30006FAE47 /* UserProfileViews */,
 				DC78179F2223FB0E006FAE47 /* UploadPostViews */,
 				DC7817A12223FB3E006FAE47 /* SearchViews */,
+				DC7817AA2226C235006FAE47 /* FeedViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -208,6 +211,14 @@
 				DCC346CD2216FE9B0004D591 /* SearchUserCell.swift */,
 			);
 			path = SearchViews;
+			sourceTree = "<group>";
+		};
+		DC7817AA2226C235006FAE47 /* FeedViews */ = {
+			isa = PBXGroup;
+			children = (
+				DC7817A82226C22F006FAE47 /* FeedCell.swift */,
+			);
+			path = FeedViews;
 			sourceTree = "<group>";
 		};
 		DCC346C1221459260004D591 /* Login */ = {
@@ -409,6 +420,7 @@
 				DC78179C2223FAA0006FAE47 /* SelectPhotoCell.swift in Sources */,
 				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,
+				DC7817A92226C22F006FAE47 /* FeedCell.swift in Sources */,
 				DC78179622206E3B006FAE47 /* FollowCell.swift in Sources */,
 				DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */,
 				DC7817A7222442CA006FAE47 /* CustomImageView.swift in Sources */,

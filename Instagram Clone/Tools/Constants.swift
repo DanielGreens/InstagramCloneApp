@@ -36,3 +36,5 @@ let USER_FOLLOWERS_REF = DB_REF.child("user-followers")
 let POSTS_REF = DB_REF.child("posts")
 /// Ссылка на таблитцу постов пользователей
 let USER_POSTS_REF = DB_REF.child("user-posts")
+/// Ссылка на таблицу - ленту новостей для пользователей
+let USER_FEED_REF = DB_REF.child("user-feed")

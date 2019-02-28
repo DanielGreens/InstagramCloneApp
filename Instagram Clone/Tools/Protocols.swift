@@ -39,3 +39,15 @@ protocol FollowCellDelegate {
     ///Обработка нажатия кнопки Подписаться / Отписаться
     func handleTapFollowButton(for cell: FollowCell)
 }
+
+protocol FeedCellDelegate {
+    
+    ///Нажата кнопка имени пользователя
+    func handleTapUsername(for cell: FeedCell)
+    ///Нажата кнопка дополнительной информации о посте
+    func handleTapOption(for cell: FeedCell)
+    ///Нажата кнопка лайк
+    func handleTapLike(for cell: FeedCell)
+    ///Нажата кнопка комментариев
+    func handleTapComment(for cell: FeedCell)
+}

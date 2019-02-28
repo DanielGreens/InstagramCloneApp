@@ -116,6 +116,9 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                     //Добавляем к пользователю currentID идентифкатор нового созданного поста postID
                     USER_POSTS_REF.child(currentID).updateChildValues([postIdKey : 1])
                     
+                    //Обновляем ленту новостей подписчиков и самого пользователя
+                    self.updateUsersFeeds(with: postIdKey)
+                    
                     //Возвращаемся на новостную ленту
                     self.dismiss(animated: true, completion: {
                         self.tabBarController?.selectedIndex = 0
@@ -123,6 +126,25 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                 })
             })
         }
+    }
+    
+    // MARK: - Вспомогательные функции
+    
+    ///Обновляет ленту подписчиков добавленной публикацией текущего пользователя
+    private func updateUsersFeeds(with postID: String) {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else {return}
+        
+        let values = [postID : 1]
+        
+        //Обновляем ленту новостей для полписчиков текущего пользователя
+        USER_FOLLOWERS_REF.child(currentUserID).observe(.childAdded) { (dataFromDB) in
+            let followerID = dataFromDB.key
+            USER_FEED_REF.child(followerID).updateChildValues(values)
+        }
+        
+        //Обновляем ленту новостей текущего пользователя
+        USER_FEED_REF.child(currentUserID).updateChildValues(values)
     }
     
     // MARK: - UITextViewDelegate
