@@ -18,8 +18,8 @@
 		DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571F1221032D0005EDFFE /* SignUpVC.swift */; };
 		DC7571F8221033B9005EDFFE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */; };
 		DC7817922220509E006FAE47 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817912220509E006FAE47 /* Constants.swift */; };
-		DC78179422206DCF006FAE47 /* FollowVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179322206DCF006FAE47 /* FollowVC.swift */; };
-		DC78179622206E3B006FAE47 /* FollowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179522206E3B006FAE47 /* FollowCell.swift */; };
+		DC78179422206DCF006FAE47 /* FollowOrLikeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179322206DCF006FAE47 /* FollowOrLikeVC.swift */; };
+		DC78179622206E3B006FAE47 /* FollowLikeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179522206E3B006FAE47 /* FollowLikeCell.swift */; };
 		DC78179822208B7D006FAE47 /* Database-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179722208B7D006FAE47 /* Database-Extension.swift */; };
 		DC78179A2223F9CB006FAE47 /* SelectImageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817992223F9CB006FAE47 /* SelectImageVC.swift */; };
 		DC78179C2223FAA0006FAE47 /* SelectPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC78179B2223FAA0006FAE47 /* SelectPhotoCell.swift */; };
@@ -28,6 +28,9 @@
 		DC7817A5222437C2006FAE47 /* UserPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A4222437C2006FAE47 /* UserPostCell.swift */; };
 		DC7817A7222442CA006FAE47 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A6222442CA006FAE47 /* CustomImageView.swift */; };
 		DC7817A92226C22F006FAE47 /* FeedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817A82226C22F006FAE47 /* FeedCell.swift */; };
+		DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817AB22293420006FAE47 /* CommentVC.swift */; };
+		DC7817AE222934CD006FAE47 /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7817AD222934CD006FAE47 /* CommentCell.swift */; };
+		DCC00005222946DE001D8CFD /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC00004222946DE001D8CFD /* Comment.swift */; };
 		DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B52214420A0004D591 /* MainTabVC.swift */; };
 		DCC346B8221449030004D591 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B7221449030004D591 /* FeedVC.swift */; };
 		DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346B92214491F0004D591 /* SearchVC.swift */; };
@@ -54,8 +57,8 @@
 		DC7571F1221032D0005EDFFE /* SignUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpVC.swift; sourceTree = "<group>"; };
 		DC7571F7221033B9005EDFFE /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DC7817912220509E006FAE47 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		DC78179322206DCF006FAE47 /* FollowVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowVC.swift; sourceTree = "<group>"; };
-		DC78179522206E3B006FAE47 /* FollowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowCell.swift; sourceTree = "<group>"; };
+		DC78179322206DCF006FAE47 /* FollowOrLikeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowOrLikeVC.swift; sourceTree = "<group>"; };
+		DC78179522206E3B006FAE47 /* FollowLikeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowLikeCell.swift; sourceTree = "<group>"; };
 		DC78179722208B7D006FAE47 /* Database-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Database-Extension.swift"; sourceTree = "<group>"; };
 		DC7817992223F9CB006FAE47 /* SelectImageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectImageVC.swift; sourceTree = "<group>"; };
 		DC78179B2223FAA0006FAE47 /* SelectPhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoCell.swift; sourceTree = "<group>"; };
@@ -64,6 +67,9 @@
 		DC7817A4222437C2006FAE47 /* UserPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserPostCell.swift; sourceTree = "<group>"; };
 		DC7817A6222442CA006FAE47 /* CustomImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		DC7817A82226C22F006FAE47 /* FeedCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCell.swift; sourceTree = "<group>"; };
+		DC7817AB22293420006FAE47 /* CommentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentVC.swift; sourceTree = "<group>"; };
+		DC7817AD222934CD006FAE47 /* CommentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
+		DCC00004222946DE001D8CFD /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		DCC346B52214420A0004D591 /* MainTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabVC.swift; sourceTree = "<group>"; };
 		DCC346B7221449030004D591 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		DCC346B92214491F0004D591 /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
@@ -171,6 +177,7 @@
 			children = (
 				DCC346C92216E6710004D591 /* User.swift */,
 				DC7817A222242CC7006FAE47 /* Post.swift */,
+				DCC00004222946DE001D8CFD /* Comment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -178,10 +185,10 @@
 		DC7571F3221032D0005EDFFE /* View */ = {
 			isa = PBXGroup;
 			children = (
-				DC7817A02223FB30006FAE47 /* UserProfileViews */,
-				DC78179F2223FB0E006FAE47 /* UploadPostViews */,
-				DC7817A12223FB3E006FAE47 /* SearchViews */,
 				DC7817AA2226C235006FAE47 /* FeedViews */,
+				DC7817A12223FB3E006FAE47 /* SearchViews */,
+				DC78179F2223FB0E006FAE47 /* UploadPostViews */,
+				DC7817A02223FB30006FAE47 /* UserProfileViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -199,7 +206,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC346C722145DB30004D591 /* UserProfileHeader.swift */,
-				DC78179522206E3B006FAE47 /* FollowCell.swift */,
+				DC78179522206E3B006FAE47 /* FollowLikeCell.swift */,
 				DC7817A4222437C2006FAE47 /* UserPostCell.swift */,
 			);
 			path = UserProfileViews;
@@ -217,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				DC7817A82226C22F006FAE47 /* FeedCell.swift */,
+				DC7817AD222934CD006FAE47 /* CommentCell.swift */,
 			);
 			path = FeedViews;
 			sourceTree = "<group>";
@@ -234,6 +242,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC346B7221449030004D591 /* FeedVC.swift */,
+				DC7817AB22293420006FAE47 /* CommentVC.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -267,7 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC346BF2214496D0004D591 /* UserProfileVC.swift */,
-				DC78179322206DCF006FAE47 /* FollowVC.swift */,
+				DC78179322206DCF006FAE47 /* FollowOrLikeVC.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -402,6 +411,7 @@
 				DC261D402220265900A06218 /* Protocols.swift in Sources */,
 				DCC346CE2216FE9B0004D591 /* SearchUserCell.swift in Sources */,
 				DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */,
+				DCC00005222946DE001D8CFD /* Comment.swift in Sources */,
 				DCC346B8221449030004D591 /* FeedVC.swift in Sources */,
 				DC78179822208B7D006FAE47 /* Database-Extension.swift in Sources */,
 				DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */,
@@ -411,17 +421,19 @@
 				DC78179A2223F9CB006FAE47 /* SelectImageVC.swift in Sources */,
 				DC78179E2223FAE3006FAE47 /* SelectPhotoHeader.swift in Sources */,
 				DC7817A322242CC7006FAE47 /* Post.swift in Sources */,
+				DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
+				DC7817AE222934CD006FAE47 /* CommentCell.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
 				DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */,
 				DCC346CA2216E6710004D591 /* User.swift in Sources */,
-				DC78179422206DCF006FAE47 /* FollowVC.swift in Sources */,
+				DC78179422206DCF006FAE47 /* FollowOrLikeVC.swift in Sources */,
 				DC7817A5222437C2006FAE47 /* UserPostCell.swift in Sources */,
 				DC78179C2223FAA0006FAE47 /* SelectPhotoCell.swift in Sources */,
 				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,
 				DC7817A92226C22F006FAE47 /* FeedCell.swift in Sources */,
-				DC78179622206E3B006FAE47 /* FollowCell.swift in Sources */,
+				DC78179622206E3B006FAE47 /* FollowLikeCell.swift in Sources */,
 				DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */,
 				DC7817A7222442CA006FAE47 /* CustomImageView.swift in Sources */,
 			);

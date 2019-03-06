@@ -219,18 +219,16 @@ extension UserProfileVC : UserProfileHeaderDelegate {
     }
 
     func handleTapFollowers(for header: UserProfileHeader) {
-        let followersVC = FollowVC()
-        followersVC.navigationItem.title = "Подписчики"
-        followersVC.viewFollowers = true
+        let followersVC = FollowLikeVC()
+        followersVC.viewingMode = .Followers
         //Передаем ID пользователя не текущего а того чей профиль мы просматриваем, так как попасть на количество подписок и подписчиков мы можем как со страницы текущего пользователя, так и со старницы поиска, нажав на интересующего человек, и уже с его профиля посмотреть его подписки. Поэтому передаем ID того пользователя чью страницу мы просматриваем
         followersVC.userID = user?.userID
         navigationController?.pushViewController(followersVC, animated: true)
     }
     
     func handleTapFollow(for header: UserProfileHeader) {
-        let followVC = FollowVC()
-        followVC.navigationItem.title = "Подписки"
-        followVC.viewFollow = true
+        let followVC = FollowLikeVC()
+        followVC.viewingMode = .Following
         followVC.userID = user?.userID
         navigationController?.pushViewController(followVC, animated: true)
     }

@@ -191,15 +191,68 @@ extension FeedVC : FeedCellDelegate {
 
     }
     
-    func handleTapLike(for cell: FeedCell) {
-        print("Лайк")
-
+    func handleTapLike(for cell: FeedCell, isDoubleTap: Bool) {
+        
+        guard let post = cell.post else {return}
+        guard let likes = post.likes else {return}
+        
+        //Если публикация уже лайкнута, то нужно снять лайк, и наоборот
+        if post.didLike {
+            //По двойному тапу по картинке мы можем только лайкнуть пост, а снять лайк двойным тапом нельзя
+            if !isDoubleTap {
+                post.setLikes(addLike: false) { (likes) in
+                    cell.likesLabel.text = "Понравилось: \(likes)"
+                }
+                cell.likesLabel.text = "Понравилось: \(likes - 1)" //Вставляем здесь, чтобы анимация добавления лайка сработала сраз же, и не создавалась видимость зависания
+                cell.likeButton.setImage(UIImage(named: "unlike"), for: .normal)
+                cell.likeButton.tintColor = .black
+            }
+        }
+        //Поставить лайк
+        else {
+            post.setLikes(addLike: true) { (likes) in
+                cell.likesLabel.text = "Понравилось: \(likes)"
+            }
+            cell.likesLabel.text = "Понравилось: \(likes + 1)"
+            cell.likeButton.setImage(UIImage(named: "like"), for: .normal)
+            cell.likeButton.tintColor = .red
+        }
     }
     
     func handleTapComment(for cell: FeedCell) {
-        print("Коменты")
-
+        guard let postID = cell.post?.postID else {return}
+        let commentVC = CommentVC(collectionViewLayout: UICollectionViewFlowLayout())
+        commentVC.postID = postID
+        navigationController?.pushViewController(commentVC, animated: true)
     }
     
+    func handleConfigureLikeButton(for cell: FeedCell) {
+        
+        guard let post = cell.post else{return}
+        guard let postID = post.postID else {return}
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else {return}
+        
+        USER_LIKES_REF.child(currentUserID).observeSingleEvent(of: .value) { (dataFromDB) in
+            //Если текущий пользователь лайкал этот пост, то сердчеко будет красным
+            if dataFromDB.hasChild(postID) {
+                post.didLike = true
+                cell.likeButton.setImage(UIImage(named: "like"), for: .normal)
+                cell.likeButton.tintColor = .red
+            }
+            else {
+                post.didLike = false
+                cell.likeButton.setImage(UIImage(named: "unlike"), for: .normal)
+                cell.likeButton.tintColor = .black
+            }
+        }
+    }
     
+    func handleTapLikeLabel(for cell: FeedCell) {
+        guard let postId = cell.post?.postID else {return}
+        let followLikeVC = FollowLikeVC()
+        followLikeVC.viewingMode = .Likes
+        followLikeVC.postID = postId
+        navigationController?.pushViewController(followLikeVC, animated: true)
+    }
 }

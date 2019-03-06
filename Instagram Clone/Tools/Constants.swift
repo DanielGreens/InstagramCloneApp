@@ -38,3 +38,9 @@ let POSTS_REF = DB_REF.child("posts")
 let USER_POSTS_REF = DB_REF.child("user-posts")
 /// Ссылка на таблицу - ленту новостей для пользователей
 let USER_FEED_REF = DB_REF.child("user-feed")
+/// Ссылка на таблицу - какой пользователь какие посты лайкнул
+let USER_LIKES_REF = DB_REF.child("user-likes")
+/// Ссылка на таблицу - кто лайкнул какой пост
+let POST_LIKES_REF = DB_REF.child("post-likes")
+/// Ссылка на таблицу комментариеы
+let COMMENTS_REF = DB_REF.child("comments")

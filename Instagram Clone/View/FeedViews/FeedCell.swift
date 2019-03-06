@@ -29,7 +29,7 @@ class FeedCell: UICollectionViewCell {
             
             postImageView.loadImage(with: post.imageURL)
             likesLabel.text = "Понравилось: \(post.likes!)"
-            
+            configureLikeButton()
         }
     }
     
@@ -64,18 +64,23 @@ class FeedCell: UICollectionViewCell {
     }()
     
     ///Фотография публикации
-    let postImageView: CustomImageView = {
+    lazy var postImageView: CustomImageView = {
         let image = CustomImageView()
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true
         image.backgroundColor = .lightGray
+        
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTapLikePost))
+        doubleTap.numberOfTapsRequired = 2
+        image.isUserInteractionEnabled = true
+        image.addGestureRecognizer(doubleTap)
         return image
     }()
     
     ///Кнопка лайк
     lazy var likeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "like_unselected"), for: .normal)
+        button.setImage(UIImage(named: "unlike"), for: .normal)
         button.tintColor = .black
         button.addTarget(self, action: #selector(handleTapLike), for: .touchUpInside)
         return button
@@ -107,10 +112,13 @@ class FeedCell: UICollectionViewCell {
     }()
     
     ///Кому понравилось
-    let likesLabel: UILabel = {
+    lazy var likesLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.text = "Нравится: 3"
+        let likeTap = UITapGestureRecognizer(target: self, action: #selector(handleTapLikeLable))
+        likeTap.numberOfTapsRequired = 1
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(likeTap)
         return label
     }()
     
@@ -218,10 +226,22 @@ class FeedCell: UICollectionViewCell {
     }
     
     @objc func handleTapLike() {
-        delegate?.handleTapLike(for: self)
+        delegate?.handleTapLike(for: self, isDoubleTap: false)
     }
     
     @objc func handleTapComment() {
         delegate?.handleTapComment(for: self)
+    }
+    
+    @objc func handleTapLikeLable() {
+        delegate?.handleTapLikeLabel(for: self)
+    }
+    
+    @objc func handleDoubleTapLikePost() {
+        delegate?.handleTapLike(for: self, isDoubleTap: true)
+    }
+    
+    func configureLikeButton() {
+        delegate?.handleConfigureLikeButton(for: self)
     }
 }

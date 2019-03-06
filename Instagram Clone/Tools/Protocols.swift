@@ -37,7 +37,7 @@ protocol UserProfileHeaderDelegate {
 protocol FollowCellDelegate {
     
     ///Обработка нажатия кнопки Подписаться / Отписаться
-    func handleTapFollowButton(for cell: FollowCell)
+    func handleTapFollowButton(for cell: FollowLikeCell)
 }
 
 protocol FeedCellDelegate {
@@ -47,7 +47,11 @@ protocol FeedCellDelegate {
     ///Нажата кнопка дополнительной информации о посте
     func handleTapOption(for cell: FeedCell)
     ///Нажата кнопка лайк
-    func handleTapLike(for cell: FeedCell)
+    func handleTapLike(for cell: FeedCell, isDoubleTap: Bool)
     ///Нажата кнопка комментариев
     func handleTapComment(for cell: FeedCell)
+    ///Настройка отображения кнопки лайка (Лайкнут ли пост или нет)
+    func handleConfigureLikeButton(for cell: FeedCell)
+    ///Нажата надпись о количестве лайкнувших
+    func handleTapLikeLabel(for cell: FeedCell)
 }
