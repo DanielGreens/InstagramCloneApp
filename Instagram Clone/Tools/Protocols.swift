@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol UserProfileHeaderDelegate {
     
     ///Нажата кнопка Редактировать профиль или Подписаться / Отписаться от пользователя
@@ -33,7 +32,6 @@ protocol UserProfileHeaderDelegate {
     func handleTapFollow(for header: UserProfileHeader)
 }
 
-
 protocol FollowCellDelegate {
     
     ///Обработка нажатия кнопки Подписаться / Отписаться
@@ -54,4 +52,22 @@ protocol FeedCellDelegate {
     func handleConfigureLikeButton(for cell: FeedCell)
     ///Нажата надпись о количестве лайкнувших
     func handleTapLikeLabel(for cell: FeedCell)
+}
+
+protocol Printable {
+    /// Описание для соответствующего значения перечисления
+    var description: String { get }
+}
+
+protocol NotificationCellDelegate {
+    
+    ///Нажата кнопка Подписаться\Отписаться
+    /// - Parameters:
+    ///     - cell: Класс для которого обрабатывается нажатие
+    func handleTapFollow(for cell: NotificationCell)
+    
+    ///Нажата иконка поста
+    /// - Parameters:
+    ///     - cell: Класс для которого обрабатывается нажатие
+    func handleTapPost(for cell: NotificationCell)
 }

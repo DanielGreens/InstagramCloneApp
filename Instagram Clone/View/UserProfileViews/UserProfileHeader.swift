@@ -88,7 +88,6 @@ class UserProfileHeader: UICollectionViewCell {
     ///Кнопка редактирования профиля
     lazy var editProfileOrFollowButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Загрузка...", for: .normal)
         button.layer.cornerRadius = 5
         button.layer.borderColor = UIColor.lightGray.cgColor
         button.layer.borderWidth = 0.5

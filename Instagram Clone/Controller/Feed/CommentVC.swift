@@ -15,8 +15,8 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     
     // MARK: - Свойства
     
-    ///Идентификатор комментируемого поста
-    var postID: String?
+    ///Информация комментируемого поста
+    var post: Post?
     ///Все комментарии для текущего поста
     var comments = [Comment]()
     
@@ -141,7 +141,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     ///Загружает все комментарии для данного поста
     private func fetchComments() {
         
-        guard let postID = self.postID else {return}
+        guard let postID = self.post?.postID else {return}
         
         COMMENTS_REF.child(postID).observe(.childAdded) { (dataFromDB) in
             
@@ -159,12 +159,33 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
     }
     
+    ///Отправляет уведомление о новом комментарии для поста на сервер
+    private func uploadCommentNotificationToServer() {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid,
+              let postID = self.post?.postID,
+              let userID = self.post?.user?.userID else { return }
+        let creationDate = Int(NSDate().timeIntervalSince1970)
+        
+        //Значение уведомления
+        let values = ["checked" : 0,
+                      "creationDate" : creationDate,
+                      "userID" : currentUserID,
+                      "type": NotificationType.Comment.rawValue,
+                      "postID" : postID] as Dictionary<String, Any>
+        
+        //Загружаем информацию на сервер, только если пользователь комментирует не свой пост
+        if currentUserID != userID {
+            NOTIFICATONS_REF.child(userID).childByAutoId().updateChildValues(values)
+        }
+    }
+    
     
     // MARK: - Обработка нажатия кнопок
     
     @objc func handleTapPostButton() {
         
-        guard let commentText = commentTextField.text, let currentUserID = Auth.auth().currentUser?.uid, let postID = postID else {return}
+        guard let commentText = commentTextField.text, let currentUserID = Auth.auth().currentUser?.uid, let postID = post?.postID else {return}
         let creationDate = Int(NSDate().timeIntervalSince1970)
         
         let values = ["commentText": commentText,
@@ -172,6 +193,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                       "userID" : currentUserID] as [String : Any]
         
         COMMENTS_REF.child(postID).childByAutoId().updateChildValues(values) { (error, ref) in
+            self.uploadCommentNotificationToServer()
             self.commentTextField.text = nil
         }
     }

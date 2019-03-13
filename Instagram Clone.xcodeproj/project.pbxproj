@@ -40,6 +40,9 @@
 		DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346C722145DB30004D591 /* UserProfileHeader.swift */; };
 		DCC346CA2216E6710004D591 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346C92216E6710004D591 /* User.swift */; };
 		DCC346CE2216FE9B0004D591 /* SearchUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC346CD2216FE9B0004D591 /* SearchUserCell.swift */; };
+		DCCF0E4A2237FA2800F4F55F /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E492237FA2800F4F55F /* NotificationCell.swift */; };
+		DCCF0E4D2238FA8E00F4F55F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E4C2238FA8E00F4F55F /* Notification.swift */; };
+		DCCF0E5122392BEE00F4F55F /* UIButton-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +82,11 @@
 		DCC346C722145DB30004D591 /* UserProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileHeader.swift; sourceTree = "<group>"; };
 		DCC346C92216E6710004D591 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DCC346CD2216FE9B0004D591 /* SearchUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
+		DCCF0E492237FA2800F4F55F /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
+		DCCF0E4C2238FA8E00F4F55F /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		DCCF0E4E2239295500F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		DCCF0E4F2239295600F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton-Extension.swift"; sourceTree = "<group>"; };
 		F92EC2E8C0F937920FEC6BD5 /* Pods-Instagram Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,6 +162,7 @@
 				DC261D3F2220265900A06218 /* Protocols.swift */,
 				DC7817912220509E006FAE47 /* Constants.swift */,
 				DC7817A6222442CA006FAE47 /* CustomImageView.swift */,
+				DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -178,6 +187,7 @@
 				DCC346C92216E6710004D591 /* User.swift */,
 				DC7817A222242CC7006FAE47 /* Post.swift */,
 				DCC00004222946DE001D8CFD /* Comment.swift */,
+				DCCF0E4C2238FA8E00F4F55F /* Notification.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -188,6 +198,7 @@
 				DC7817AA2226C235006FAE47 /* FeedViews */,
 				DC7817A12223FB3E006FAE47 /* SearchViews */,
 				DC78179F2223FB0E006FAE47 /* UploadPostViews */,
+				DCCF0E4B2237FA4E00F4F55F /* NotificationViews */,
 				DC7817A02223FB30006FAE47 /* UserProfileViews */,
 			);
 			path = View;
@@ -279,6 +290,14 @@
 				DC78179322206DCF006FAE47 /* FollowOrLikeVC.swift */,
 			);
 			path = UserProfile;
+			sourceTree = "<group>";
+		};
+		DCCF0E4B2237FA4E00F4F55F /* NotificationViews */ = {
+			isa = PBXGroup;
+			children = (
+				DCCF0E492237FA2800F4F55F /* NotificationCell.swift */,
+			);
+			path = NotificationViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -423,16 +442,19 @@
 				DC7817A322242CC7006FAE47 /* Post.swift in Sources */,
 				DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
+				DCCF0E5122392BEE00F4F55F /* UIButton-Extension.swift in Sources */,
 				DC7817AE222934CD006FAE47 /* CommentCell.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
 				DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */,
 				DCC346CA2216E6710004D591 /* User.swift in Sources */,
 				DC78179422206DCF006FAE47 /* FollowOrLikeVC.swift in Sources */,
 				DC7817A5222437C2006FAE47 /* UserPostCell.swift in Sources */,
+				DCCF0E4A2237FA2800F4F55F /* NotificationCell.swift in Sources */,
 				DC78179C2223FAA0006FAE47 /* SelectPhotoCell.swift in Sources */,
 				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,
 				DC7817A92226C22F006FAE47 /* FeedCell.swift in Sources */,
+				DCCF0E4D2238FA8E00F4F55F /* Notification.swift in Sources */,
 				DC78179622206E3B006FAE47 /* FollowLikeCell.swift in Sources */,
 				DCC346BA2214491F0004D591 /* SearchVC.swift in Sources */,
 				DC7817A7222442CA006FAE47 /* CustomImageView.swift in Sources */,
@@ -446,6 +468,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				DC7571E022103267005EDFFE /* Base */,
+				DCCF0E4E2239295500F4F55F /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -454,6 +477,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				DC7571E522103268005EDFFE /* Base */,
+				DCCF0E4F2239295600F4F55F /* ru */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -465,6 +489,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -526,6 +551,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

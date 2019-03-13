@@ -27,7 +27,6 @@ let STORAGE_POST_IMAGES_REF = STORAGE_REF.child("post_images")
 
 /// Ссылка на данные о Пользователях
 let USER_REF = DB_REF.child("users")
-
 /// Ссылка на таблицу подписок для пользователя
 let USER_FOLLOWING_REF = DB_REF.child("user-following")
 /// Ссылка на таблицу подписчиков пользователя
@@ -44,3 +43,34 @@ let USER_LIKES_REF = DB_REF.child("user-likes")
 let POST_LIKES_REF = DB_REF.child("post-likes")
 /// Ссылка на таблицу комментариеы
 let COMMENTS_REF = DB_REF.child("comments")
+/// Ссылка на таблицу комментариеы
+let NOTIFICATONS_REF = DB_REF.child("notifications")
+
+// MARK: - Перечисления для таблицы Notifications
+
+///Тип уведомления отправляемого на сервер
+enum NotificationType: Int, Printable {
+    ///Уведомление о лайке поста
+    case Like
+    ///Уведомление о новом комментарии для поста
+    case Comment
+    ///Уведомление о новом подписчике
+    case Follow
+    
+    init(index: Int) {
+        switch index {
+        case 0: self = .Like
+        case 1: self = .Comment
+        case 2: self = .Follow
+        default: self = .Like
+        }
+    }
+    
+    var description: String {
+        switch self {
+        case .Like: return "понравился ваш пост "
+        case .Comment: return "прокомментировал вашу публикацию "
+        case .Follow: return "подписался на вас "
+        }
+    }
+}

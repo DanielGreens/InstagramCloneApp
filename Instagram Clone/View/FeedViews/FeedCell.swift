@@ -46,7 +46,6 @@ class FeedCell: UICollectionViewCell {
     ///Никнейм пользователя
     lazy var usernameButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("UserName", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(handleTapUserName), for: .touchUpInside)
@@ -125,9 +124,6 @@ class FeedCell: UICollectionViewCell {
     ///Текст описания поста
     let descriptionLabel: UILabel = {
         let label = UILabel()
-        let attributedText = NSMutableAttributedString(string: "Username", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 12)])
-        attributedText.append(NSAttributedString(string: " Some text for description", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)]))
-        label.attributedText = attributedText
         return label
     }()
     

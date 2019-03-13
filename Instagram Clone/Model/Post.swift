@@ -67,6 +67,10 @@ class Post {
             
             //Добавляем информацию в таблицу user-likes
             USER_LIKES_REF.child(currentUserID).updateChildValues([postID : 1]) { (error, ref) in
+                
+                //Посылаем уведомление о лайке на сервер
+                self.sendLikeNotificationToServer()
+                
                 //Добавляем информацию в таблицу post-likes
                 POST_LIKES_REF.child(self.postID).updateChildValues([currentUserID : 1]) { (error, ref) in
                     self.likes += 1
@@ -79,20 +83,54 @@ class Post {
         }
         else{
             guard likes > 0 else {return}
-            //Удаляем информацию из таблицы user-likes
-            USER_LIKES_REF.child(currentUserID).child(postID).removeValue { (error, ref) in
-                //Удаляем информацию из таблицы post-likes
-                POST_LIKES_REF.child(self.postID).child(currentUserID).removeValue(completionBlock: { (error, ref) in
-                    self.likes -= 1
-                    self.didLike = false
-                    //Обновляем информацию о количестве лайков поста
-                    POSTS_REF.child(self.postID).child("likes").setValue(self.likes)
-                    completion(self.likes)
+            
+            //Перед тем как удалить информацию из таблицы user-likes, сначала нам надо удалить информацию из таблицы notifications
+            USER_LIKES_REF.child(currentUserID).child(postID).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                //Получаем ID уведомления для текущего поста, чтобы удалить его
+                guard let notificationID = dataFromDB.value as? String else {return}
+                
+                //Удаляем уведомление
+                NOTIFICATONS_REF.child(self.ownerID).child(notificationID).removeValue(completionBlock: { (error, ref) in
+                    
+                    //А теперь мы удаляем информацию из таблицы user-likes
+                    USER_LIKES_REF.child(currentUserID).child(postID).removeValue { (error, ref) in
+                        //Удаляем информацию из таблицы post-likes
+                        POST_LIKES_REF.child(self.postID).child(currentUserID).removeValue(completionBlock: { (error, ref) in
+                            self.likes -= 1
+                            self.didLike = false
+                            //Обновляем информацию о количестве лайков поста
+                            POSTS_REF.child(self.postID).child("likes").setValue(self.likes)
+                            completion(self.likes)
+                        })
+                    }
                 })
             }
         }
         
     }
     
+    ///Посылает уведомление о лайке на сервер
+    private func sendLikeNotificationToServer() {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else{return}
+        let creationDate = Int(NSDate().timeIntervalSince1970)
+        
+        //Если пользователь лайкнул собственную публикацию то мы не будет уведомлять его об этом
+        if currentUserID != self.ownerID {
+            let values = ["checked" : 0,
+                          "creationDate" : creationDate,
+                          "userID" : currentUserID,
+                          "type": NotificationType.Like.rawValue,
+                          "postID" : postID] as Dictionary<String, Any>
+            
+            //Добавляем созданную информацию в таблицу Notifications
+            let notificationRef = NOTIFICATONS_REF.child(self.ownerID).childByAutoId()
+            notificationRef.updateChildValues(values) { (error, dataFromDB) in
+                //Затем добавляем в таблицу user-likes к лайкнутому посту созданное уведомление по его ID
+                USER_LIKES_REF.child(currentUserID).child(self.postID).setValue(notificationRef.key)
+            }
+        }
+    }
     
 }

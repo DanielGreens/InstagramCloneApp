@@ -62,6 +62,9 @@ class User {
         //Добавляем для uid нового подписчика в структуру user-followers (Подписчики пользователей)
         USER_FOLLOWERS_REF.child(userID).updateChildValues([currentUserID: 1])
         
+        //Добавляем уведомление о подписчике на сервер
+        uploadFollowNotificationToServer()
+        
         //Обновляем ленту новостей пользователя добавляя публикации новой подписки
         USER_POSTS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
             
@@ -100,8 +103,8 @@ class User {
         guard let currentUserID = Auth.auth().currentUser?.uid else {return}
         
         USER_FOLLOWING_REF.child(currentUserID).observeSingleEvent(of: .value) { (dataFromDB) in
-            
-            //Если в таблице для currentUserID есть поле с userID, то currentUserID подписан на userID
+
+            //Если в таблице user-following для currentUserID есть поле с userID, то currentUserID подписан на userID
             if dataFromDB.hasChild(self.userID){
                 self.isFollowed = true
                 completion(true)
@@ -111,6 +114,22 @@ class User {
                 completion(false)
             }
         }
+    }
+    
+    ///Отправляет уведомление о новом подписчике на сервер
+    private func uploadFollowNotificationToServer() {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        let creationDate = Int(NSDate().timeIntervalSince1970)
+        
+        //Значение уведомления
+        let values = ["checked" : 0,
+                      "creationDate" : creationDate,
+                      "userID" : currentUserID,
+                      "type": NotificationType.Follow.rawValue] as Dictionary<String, Any>
+        
+        //Загружаем информацию на сервер, только если пользователь комментирует не свой пост
+        NOTIFICATONS_REF.child(self.userID).childByAutoId().updateChildValues(values)
     }
     
     

@@ -10,6 +10,10 @@ import UIKit
 import Firebase
 
 class MainTabVC: UITabBarController, UITabBarControllerDelegate {
+    
+    // MARK: - Свойства
+    
+    let dot = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,6 +21,10 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
         
         configureViewController()
+        
+        configureNotificationDot()
+        
+        observeNotifications()
         
         checkIsUserLogIn()
     }
@@ -34,6 +42,10 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
             present(navController, animated: true, completion: nil)
             
             return false
+        }
+        else if index == 3 {
+            dot.isHidden = true
+            return true
         }
         return true
     }
@@ -82,6 +94,33 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         return navController
     }
     
+    ///Устанавливает точку если есть новые уведомления
+    private func configureNotificationDot() {
+        
+        if UIDevice().userInterfaceIdiom == .phone {
+            let tabBarHeight = tabBar.frame.height
+
+            //Для айфона X, XS и XS Max
+            if UIScreen.main.nativeBounds.height > 2400 {
+                print("X")
+                //5 - общее количество страницек в таб баре, 3 - индекс страницы на которую мы хотим установить точку
+                dot.frame = CGRect(x: view.frame.width / 5 * 3, y: view.frame.height - tabBarHeight, width: 6, height: 6)
+            }
+            //Для остальных
+            else {
+                print("8")
+                dot.frame = CGRect(x: view.frame.width / 5 * 3, y: view.frame.height - 16, width: 6, height: 6)
+            }
+            
+            dot.center.x = (view.frame.width / 5 * 3 + (view.frame.width / 5) / 2)
+            dot.backgroundColor = UIColor(red: 233/255, green: 30/255, blue: 99/255, alpha: 1)
+            dot.layer.cornerRadius = 3
+            
+            view.addSubview(dot)
+            dot.isHidden = true
+        }
+    }
+    
     // MARK: - Вспомогательные функции
     
     /// Проверяет авторизирован ли пользователь в БД
@@ -93,6 +132,37 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
                 let navigationController = UINavigationController(rootViewController: LoginVC())
                 self.present(navigationController, animated: true, completion: nil)
             }
+        }
+    }
+    
+    ///Проверяет есть ли не просмотренные уведомления
+    private func observeNotifications() {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else { return }
+        
+        //Получаем список уведомлений для текущего пользователя
+        NOTIFICATONS_REF.child(currentUserID).observeSingleEvent(of: .value) { (dataFromDB) in
+            
+            guard let allObject = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+            
+            allObject.forEach({ (data) in
+                
+                let notificationID = data.key
+                //Проверяем у каждого уведомления поле checked
+                NOTIFICATONS_REF.child(currentUserID).child(notificationID).child("checked").observeSingleEvent(of: .value, with: { (data) in
+                    
+                    guard let checked = data.value as? Int else {return}
+                    
+                    //Не просмотренные уведомления
+                    if checked == 0 {
+                        self.dot.isHidden = false
+                    }
+                        //Просмотренные уведомления
+                    else {
+                        self.dot.isHidden = true
+                    }
+                })
+            })
         }
     }
 

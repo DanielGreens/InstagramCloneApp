@@ -40,8 +40,6 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         if !viewSinglePost {
             fetchPosts()
         }
-        
-//        updateUserFeeds()
     }
     
     // MARK: - Настройка внешнего вида окна
@@ -220,9 +218,9 @@ extension FeedVC : FeedCellDelegate {
     }
     
     func handleTapComment(for cell: FeedCell) {
-        guard let postID = cell.post?.postID else {return}
+        guard let post = cell.post else {return}
         let commentVC = CommentVC(collectionViewLayout: UICollectionViewFlowLayout())
-        commentVC.postID = postID
+        commentVC.post = post
         navigationController?.pushViewController(commentVC, animated: true)
     }
     

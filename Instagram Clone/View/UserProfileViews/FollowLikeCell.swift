@@ -60,10 +60,8 @@ class FollowLikeCell: UITableViewCell {
     ///Кнопка подписаться или отписаться
     lazy var followButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("Загрузка...", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
         button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         button.layer.cornerRadius = 3
         button.addTarget(self, action: #selector(handleTapFollowButton), for: .touchUpInside)
         
