@@ -43,6 +43,7 @@
 		DCCF0E4A2237FA2800F4F55F /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E492237FA2800F4F55F /* NotificationCell.swift */; };
 		DCCF0E4D2238FA8E00F4F55F /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E4C2238FA8E00F4F55F /* Notification.swift */; };
 		DCCF0E5122392BEE00F4F55F /* UIButton-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */; };
+		DCCF0E532239635800F4F55F /* SearchPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCCF0E522239635700F4F55F /* SearchPostCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,7 @@
 		DCCF0E4E2239295500F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		DCCF0E4F2239295600F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton-Extension.swift"; sourceTree = "<group>"; };
+		DCCF0E522239635700F4F55F /* SearchPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPostCell.swift; sourceTree = "<group>"; };
 		F92EC2E8C0F937920FEC6BD5 /* Pods-Instagram Clone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -227,6 +229,7 @@
 			isa = PBXGroup;
 			children = (
 				DCC346CD2216FE9B0004D591 /* SearchUserCell.swift */,
+				DCCF0E522239635700F4F55F /* SearchPostCell.swift */,
 			);
 			path = SearchViews;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				DC7817922220509E006FAE47 /* Constants.swift in Sources */,
 				DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */,
 				DC78179A2223F9CB006FAE47 /* SelectImageVC.swift in Sources */,
+				DCCF0E532239635800F4F55F /* SearchPostCell.swift in Sources */,
 				DC78179E2223FAE3006FAE47 /* SelectPhotoHeader.swift in Sources */,
 				DC7817A322242CC7006FAE47 /* Post.swift in Sources */,
 				DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */,
