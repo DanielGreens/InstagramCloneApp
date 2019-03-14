@@ -45,4 +45,20 @@ extension Database {
             })
         }
     }
+    
+    /// Загружает данные о конкретном сообщении
+    ///
+    /// - Parameters:
+    ///     - messageID: Идентификатор загружаемого сообщения
+    ///     - completion: Метод который отработает после загрузки необходимых данных
+    static func loadMessage(with messageID: String, completion: @escaping (Message) -> ()) {
+        
+        MESSAGES_REF.child(messageID).observeSingleEvent(of: .value) { (dataFromDB) in
+            
+            guard let dictionary = dataFromDB.value as? Dictionary<String, AnyObject> else {return}
+            
+            let message = Message(dictionary: dictionary)
+            completion(message)
+        }
+    }
 }

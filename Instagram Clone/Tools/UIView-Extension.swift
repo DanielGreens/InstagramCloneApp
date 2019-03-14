@@ -28,6 +28,7 @@ extension UIView {
     func setPosition(top: NSLayoutYAxisAnchor?, left: NSLayoutXAxisAnchor?, bottom: NSLayoutYAxisAnchor?, right: NSLayoutXAxisAnchor?, paddingTop: CGFloat, paddingLeft: CGFloat, paddingBottom: CGFloat, paddingRight: CGFloat, width: CGFloat, height: CGFloat) {
         
         //Позволит устанавливать элементы на любую позицию на которую мы захотим
+        //Если вы хотите использовать автоматическую компоновку для ДИНАМИЧЕСКОГО расчета размера и позиции вашего представления, вы должны установить для этого свойства значение false, а затем предоставить не двусмысленный, не конфликтующий набор ограничений для представления.
         translatesAutoresizingMaskIntoConstraints = false
         
         if let top = top {
@@ -55,4 +56,14 @@ extension UIView {
         }
     }
     
+}
+
+//Для корректного отображения поля ввода текста над клавиатурой
+class MessageView: UIView {
+    
+    //Это необходимо для того, чтобы inputAccesoryView был правильно подобран из ограничений авторазметки
+    
+    override var intrinsicContentSize: CGSize {
+        return CGSize.zero
+    }
 }

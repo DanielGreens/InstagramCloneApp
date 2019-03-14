@@ -102,13 +102,11 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
 
             //Для айфона X, XS и XS Max
             if UIScreen.main.nativeBounds.height > 2400 {
-                print("X")
                 //5 - общее количество страницек в таб баре, 3 - индекс страницы на которую мы хотим установить точку
                 dot.frame = CGRect(x: view.frame.width / 5 * 3, y: view.frame.height - tabBarHeight, width: 6, height: 6)
             }
             //Для остальных
             else {
-                print("8")
                 dot.frame = CGRect(x: view.frame.width / 5 * 3, y: view.frame.height - 16, width: 6, height: 6)
             }
             

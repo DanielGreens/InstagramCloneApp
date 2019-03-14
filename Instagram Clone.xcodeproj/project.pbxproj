@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		D4020CE4B373E5A06DD00287 /* Pods_Instagram_Clone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2929B5FDCCA2CF6A112DD33D /* Pods_Instagram_Clone.framework */; };
 		DC261D402220265900A06218 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC261D3F2220265900A06218 /* Protocols.swift */; };
+		DC5A2C2A223A7E36007BB7C2 /* MessagesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C29223A7E36007BB7C2 /* MessagesVC.swift */; };
+		DC5A2C2C223A8046007BB7C2 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C2B223A8046007BB7C2 /* MessageCell.swift */; };
+		DC5A2C2F223A8828007BB7C2 /* NewMessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C2E223A8828007BB7C2 /* NewMessageVC.swift */; };
+		DC5A2C31223A88DE007BB7C2 /* NewMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C30223A88DE007BB7C2 /* NewMessageCell.swift */; };
+		DC5A2C33223A9145007BB7C2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C32223A9145007BB7C2 /* Message.swift */; };
+		DC5A2C35223A9349007BB7C2 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C34223A9349007BB7C2 /* ChatVC.swift */; };
+		DC5A2C37223A94AA007BB7C2 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C36223A94AA007BB7C2 /* ChatCell.swift */; };
+		DC5A2C39223B0BED007BB7C2 /* UIColor-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */; };
 		DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571DB22103267005EDFFE /* AppDelegate.swift */; };
 		DC7571E122103267005EDFFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571DF22103267005EDFFE /* Main.storyboard */; };
 		DC7571E322103268005EDFFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E222103268005EDFFE /* Assets.xcassets */; };
@@ -50,6 +58,14 @@
 		2929B5FDCCA2CF6A112DD33D /* Pods_Instagram_Clone.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Instagram_Clone.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7230132C9CAF95539C54D506 /* Pods-Instagram Clone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Instagram Clone.release.xcconfig"; path = "Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone.release.xcconfig"; sourceTree = "<group>"; };
 		DC261D3F2220265900A06218 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		DC5A2C29223A7E36007BB7C2 /* MessagesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesVC.swift; sourceTree = "<group>"; };
+		DC5A2C2B223A8046007BB7C2 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		DC5A2C2E223A8828007BB7C2 /* NewMessageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageVC.swift; sourceTree = "<group>"; };
+		DC5A2C30223A88DE007BB7C2 /* NewMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageCell.swift; sourceTree = "<group>"; };
+		DC5A2C32223A9145007BB7C2 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		DC5A2C34223A9349007BB7C2 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
+		DC5A2C36223A94AA007BB7C2 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
+		DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor-Extension.swift"; sourceTree = "<group>"; };
 		DC7571D822103267005EDFFE /* Instagram Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Instagram Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7571DB22103267005EDFFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC7571E022103267005EDFFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -121,6 +137,26 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		DC5A2C28223A7E16007BB7C2 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				DC5A2C29223A7E36007BB7C2 /* MessagesVC.swift */,
+				DC5A2C2E223A8828007BB7C2 /* NewMessageVC.swift */,
+				DC5A2C34223A9349007BB7C2 /* ChatVC.swift */,
+			);
+			path = Messages;
+			sourceTree = "<group>";
+		};
+		DC5A2C2D223A804A007BB7C2 /* MessagesViews */ = {
+			isa = PBXGroup;
+			children = (
+				DC5A2C2B223A8046007BB7C2 /* MessageCell.swift */,
+				DC5A2C30223A88DE007BB7C2 /* NewMessageCell.swift */,
+				DC5A2C36223A94AA007BB7C2 /* ChatCell.swift */,
+			);
+			path = MessagesViews;
+			sourceTree = "<group>";
+		};
 		DC7571CF22103267005EDFFE = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +201,7 @@
 				DC7817912220509E006FAE47 /* Constants.swift */,
 				DC7817A6222442CA006FAE47 /* CustomImageView.swift */,
 				DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */,
+				DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -178,6 +215,7 @@
 				DCC346C4221459410004D591 /* UploadPost */,
 				DCC346C52214594B0004D591 /* Notifications */,
 				DCC346C6221459550004D591 /* UserProfile */,
+				DC5A2C28223A7E16007BB7C2 /* Messages */,
 				DCC346B52214420A0004D591 /* MainTabVC.swift */,
 			);
 			path = Controller;
@@ -190,6 +228,7 @@
 				DC7817A222242CC7006FAE47 /* Post.swift */,
 				DCC00004222946DE001D8CFD /* Comment.swift */,
 				DCCF0E4C2238FA8E00F4F55F /* Notification.swift */,
+				DC5A2C32223A9145007BB7C2 /* Message.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -202,6 +241,7 @@
 				DC78179F2223FB0E006FAE47 /* UploadPostViews */,
 				DCCF0E4B2237FA4E00F4F55F /* NotificationViews */,
 				DC7817A02223FB30006FAE47 /* UserProfileViews */,
+				DC5A2C2D223A804A007BB7C2 /* MessagesViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -431,29 +471,37 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC261D402220265900A06218 /* Protocols.swift in Sources */,
+				DC5A2C39223B0BED007BB7C2 /* UIColor-Extension.swift in Sources */,
 				DCC346CE2216FE9B0004D591 /* SearchUserCell.swift in Sources */,
+				DC5A2C35223A9349007BB7C2 /* ChatVC.swift in Sources */,
+				DC5A2C31223A88DE007BB7C2 /* NewMessageCell.swift in Sources */,
 				DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */,
 				DCC00005222946DE001D8CFD /* Comment.swift in Sources */,
 				DCC346B8221449030004D591 /* FeedVC.swift in Sources */,
 				DC78179822208B7D006FAE47 /* Database-Extension.swift in Sources */,
+				DC5A2C2F223A8828007BB7C2 /* NewMessageVC.swift in Sources */,
 				DCC346BE2214495A0004D591 /* NotificationVC.swift in Sources */,
 				DCC346BC221449420004D591 /* UploadPostVC.swift in Sources */,
 				DC7817922220509E006FAE47 /* Constants.swift in Sources */,
 				DCC346C02214496D0004D591 /* UserProfileVC.swift in Sources */,
 				DC78179A2223F9CB006FAE47 /* SelectImageVC.swift in Sources */,
 				DCCF0E532239635800F4F55F /* SearchPostCell.swift in Sources */,
+				DC5A2C2A223A7E36007BB7C2 /* MessagesVC.swift in Sources */,
 				DC78179E2223FAE3006FAE47 /* SelectPhotoHeader.swift in Sources */,
 				DC7817A322242CC7006FAE47 /* Post.swift in Sources */,
 				DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
+				DC5A2C2C223A8046007BB7C2 /* MessageCell.swift in Sources */,
 				DCCF0E5122392BEE00F4F55F /* UIButton-Extension.swift in Sources */,
 				DC7817AE222934CD006FAE47 /* CommentCell.swift in Sources */,
+				DC5A2C37223A94AA007BB7C2 /* ChatCell.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
 				DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */,
 				DCC346CA2216E6710004D591 /* User.swift in Sources */,
 				DC78179422206DCF006FAE47 /* FollowOrLikeVC.swift in Sources */,
 				DC7817A5222437C2006FAE47 /* UserPostCell.swift in Sources */,
 				DCCF0E4A2237FA2800F4F55F /* NotificationCell.swift in Sources */,
+				DC5A2C33223A9145007BB7C2 /* Message.swift in Sources */,
 				DC78179C2223FAA0006FAE47 /* SelectPhotoCell.swift in Sources */,
 				DCC346B62214420A0004D591 /* MainTabVC.swift in Sources */,
 				DC7571F5221032D0005EDFFE /* LoginVC.swift in Sources */,

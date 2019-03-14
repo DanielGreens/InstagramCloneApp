@@ -132,6 +132,8 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     ///Нажата кнопка отправить сообщение
     @objc func handleTapSendMessage() {
         
+        let messagesVC = MessagesVC()
+        navigationController?.pushViewController(messagesVC, animated: true)
     }
     
     ///Обновляет содержимое коллекции

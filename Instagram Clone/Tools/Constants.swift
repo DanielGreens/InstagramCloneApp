@@ -33,7 +33,7 @@ let USER_FOLLOWING_REF = DB_REF.child("user-following")
 let USER_FOLLOWERS_REF = DB_REF.child("user-followers")
 /// Ссылка на таблицу данных о постах
 let POSTS_REF = DB_REF.child("posts")
-/// Ссылка на таблитцу постов пользователей
+/// Ссылка на таблицу постов пользователей
 let USER_POSTS_REF = DB_REF.child("user-posts")
 /// Ссылка на таблицу - ленту новостей для пользователей
 let USER_FEED_REF = DB_REF.child("user-feed")
@@ -45,6 +45,10 @@ let POST_LIKES_REF = DB_REF.child("post-likes")
 let COMMENTS_REF = DB_REF.child("comments")
 /// Ссылка на таблицу комментариеы
 let NOTIFICATONS_REF = DB_REF.child("notifications")
+/// Ссылка на таблицу всех личных сообщений
+let MESSAGES_REF = DB_REF.child("messages")
+/// Ссылка на таблицу сообщений для конкретного пользователя
+let USER_MESSAGES_REF = DB_REF.child("user-messages")
 
 // MARK: - Перечисления для таблицы Notifications
 

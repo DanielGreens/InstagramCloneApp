@@ -43,10 +43,4 @@ class SearchPostCell : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Настройка внешнего вида окна
-    
-    
-    
-    // MARK: - Обработка нажатия кнопок
-    
 }
