@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ActiveLabel
 
 class CommentCell: UICollectionViewCell {
     
@@ -15,15 +16,16 @@ class CommentCell: UICollectionViewCell {
     ///Данные о комментарии
     var comment: Comment? {
         didSet {
-            guard let user = comment?.user, let profileImageURL = user.profileImageURL, let userName = user.username, let commentText = comment?.commentText else {return}
+            guard let profileImageURL = comment?.user?.profileImageURL else {return}
             
             profileImageView.loadImage(with: profileImageURL)
-            guard let commentDate = getComentTimeInteval() else {return}
             
-            let attributedText = NSMutableAttributedString(string: userName, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 12)])
-            attributedText.append(NSAttributedString(string: " \(commentText)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)]))
-            attributedText.append(NSAttributedString(string: " \(commentDate)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-            commentTextView.attributedText = attributedText
+//            let attributedText = NSMutableAttributedString(string: userName, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 12)])
+//            attributedText.append(NSAttributedString(string: " \(commentText)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)]))
+//            attributedText.append(NSAttributedString(string: " \(commentDate)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
+//            commentLabel.attributedText = attributedText
+            
+            configureCommentLabel()
         }
     }
 
@@ -38,11 +40,11 @@ class CommentCell: UICollectionViewCell {
     }()
     
     ///Комментарий пользователя
-    let commentTextView: UITextView = {
-        let textView = UITextView()
-        textView.isScrollEnabled = false
-        textView.isUserInteractionEnabled = false
-        return textView
+    let commentLabel: ActiveLabel = {
+        let label = ActiveLabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.numberOfLines = 0
+        return label
     }()
     
     // MARK: - Инициализаторы
@@ -66,8 +68,8 @@ class CommentCell: UICollectionViewCell {
         profileImageView.setPosition(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 40, height: 40)
         
         //Комментарий
-        addSubview(commentTextView)
-        commentTextView.setPosition(top: topAnchor, left: profileImageView.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 4, paddingRight: 8, width: 0, height: 0)
+        addSubview(commentLabel)
+        commentLabel.setPosition(top: topAnchor, left: profileImageView.rightAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 4, paddingRight: 8, width: 0, height: 0)
     }
     
     ///Возвращает дату когда данный пост был опубликован в определенном формате
@@ -85,6 +87,48 @@ class CommentCell: UICollectionViewCell {
         let dateToDisplay = dateFormatter.string(from: comment.creationDate, to: now)
         
         return dateToDisplay
+    }
+    
+    ///Настраивает отображение текста комментария
+    private func configureCommentLabel() {
+        
+        guard let user = comment?.user,
+              let userName = user.username,
+              let commentText = comment?.commentText,
+              let commentDate = getComentTimeInteval() else {return}
+        
+        //Настраиваем регулярное выражение на поиск имени в строке
+        let customType = ActiveType.custom(pattern: "^\(userName)\\b")
+        
+        //Настраиваем регулярное выражение на поиск даты в строке
+        let customDateType = ActiveType.custom(pattern: "\\s\(commentDate)\\b")
+        
+        commentLabel.enabledTypes = [.mention, .hashtag, .url, customType, customDateType]
+        
+        //Настраиваем имя пользователя на жирный шрифт, так как обычный attributedText для ActiveLabel не работает
+        //Настраиваем дату на светло-серый шрифт
+        commentLabel.configureLinkAttribute = { (type, attributesDict, isSelected) in
+            var attributes = attributesDict
+            
+            switch type {
+            //Имя пользователя
+            case customType:
+                attributes[NSAttributedString.Key.font] = UIFont.boldSystemFont(ofSize: 12)
+            //Дата
+            case customDateType:
+                attributes[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 12)
+                attributes[NSAttributedString.Key.foregroundColor] = UIColor.lightGray
+            default: ()
+            }
+            return attributes
+        }
+        
+        commentLabel.customize { (label) in
+            label.text = "\(userName) \(commentText) \(commentDate)"
+            label.customColor[customType] = .black
+            label.font = UIFont.systemFont(ofSize: 12)
+            label.textColor = .black
+        }
     }
     
     // MARK: - Обработка нажатия кнопок

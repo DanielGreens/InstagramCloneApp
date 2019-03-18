@@ -41,7 +41,7 @@ let USER_FEED_REF = DB_REF.child("user-feed")
 let USER_LIKES_REF = DB_REF.child("user-likes")
 /// Ссылка на таблицу - кто лайкнул какой пост
 let POST_LIKES_REF = DB_REF.child("post-likes")
-/// Ссылка на таблицу комментариеы
+/// Ссылка на таблицу комментариев
 let COMMENTS_REF = DB_REF.child("comments")
 /// Ссылка на таблицу комментариеы
 let NOTIFICATONS_REF = DB_REF.child("notifications")
@@ -49,6 +49,8 @@ let NOTIFICATONS_REF = DB_REF.child("notifications")
 let MESSAGES_REF = DB_REF.child("messages")
 /// Ссылка на таблицу сообщений для конкретного пользователя
 let USER_MESSAGES_REF = DB_REF.child("user-messages")
+/// Ссылка на таблицу постов помеченных хэштегом
+let HASHTAG_POST_REF = DB_REF.child("hashtag-post")
 
 // MARK: - Перечисления для таблицы Notifications
 
@@ -60,12 +62,18 @@ enum NotificationType: Int, Printable {
     case Comment
     ///Уведомление о новом подписчике
     case Follow
+    ///Упоминание пользователя в комменатрии
+    case CommentMention
+    ///Упоминание пользователя в посте
+    case PostMention
     
     init(index: Int) {
         switch index {
         case 0: self = .Like
         case 1: self = .Comment
         case 2: self = .Follow
+        case 3: self = .CommentMention
+        case 4: self = .PostMention
         default: self = .Like
         }
     }
@@ -75,6 +83,8 @@ enum NotificationType: Int, Printable {
         case .Like: return "понравился ваш пост "
         case .Comment: return "прокомментировал вашу публикацию "
         case .Follow: return "подписался на вас "
+        case .CommentMention: return "упоминул(а) вас в комментарии"
+        case .PostMention: return "отметил(а) вас в публикации"
         }
     }
 }

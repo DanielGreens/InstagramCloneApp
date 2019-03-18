@@ -53,7 +53,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let button = UIButton(type: .system)
         button.setImage(UIImage(named: "send2"), for: .normal)
         button.tintColor = .black
-        button.addTarget(self, action: #selector(handleTapPostButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleUploadComment), for: .touchUpInside)
         return button
     }()
     
@@ -111,6 +111,9 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! CommentCell
         
         cell.comment = comments[indexPath.item]
+        
+        handleTapHashtag(for: cell)
+        handleTapUserMention(for: cell)
         
         return cell
     }
@@ -181,9 +184,11 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     }
     
     
+    
+    
     // MARK: - Обработка нажатия кнопок
     
-    @objc func handleTapPostButton() {
+    @objc func handleUploadComment() {
         
         guard let commentText = commentTextField.text, let currentUserID = Auth.auth().currentUser?.uid, let postID = post?.postID else {return}
         let creationDate = Int(NSDate().timeIntervalSince1970)
@@ -194,7 +199,29 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         
         COMMENTS_REF.child(postID).childByAutoId().updateChildValues(values) { (error, ref) in
             self.uploadCommentNotificationToServer()
+            //Если текст комментария содержит @, то создаем уведомление об упоминании пользователя
+            if commentText.contains("@") {
+                self.uploadMentionsNotification(for: postID, with: commentText, notificationType: .CommentMention)
+            }
             self.commentTextField.text = nil
+        }
+    }
+    
+    ///Нажат хэштег в комментариях
+    func handleTapHashtag(for cell: CommentCell) {
+        
+        cell.commentLabel.handleHashtagTap { (hashtag) in
+            let hashtagVC = HashtagVC(collectionViewLayout: UICollectionViewFlowLayout())
+            hashtagVC.hashtag = hashtag.lowercased()
+            self.navigationController?.pushViewController(hashtagVC, animated: true)
+        }
+    }
+    
+    ///Нажато имя пользователя упомянутое в комменатрии (например @ironman)
+    func handleTapUserMention(for cell: CommentCell) {
+        
+        cell.commentLabel.handleMentionTap { (mention) in
+            self.getMentionedUser(with: mention)
         }
     }
 }

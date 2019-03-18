@@ -17,6 +17,9 @@
 		DC5A2C35223A9349007BB7C2 /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C34223A9349007BB7C2 /* ChatVC.swift */; };
 		DC5A2C37223A94AA007BB7C2 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C36223A94AA007BB7C2 /* ChatCell.swift */; };
 		DC5A2C39223B0BED007BB7C2 /* UIColor-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */; };
+		DC5A469A223FF4E000991636 /* HashtagVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A4699223FF4E000991636 /* HashtagVC.swift */; };
+		DC5A469C223FF6D400991636 /* HashtagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A469B223FF6D400991636 /* HashtagCell.swift */; };
+		DC5A469E22403B6900991636 /* UIViewController-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A469D22403B6900991636 /* UIViewController-Extension.swift */; };
 		DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571DB22103267005EDFFE /* AppDelegate.swift */; };
 		DC7571E122103267005EDFFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571DF22103267005EDFFE /* Main.storyboard */; };
 		DC7571E322103268005EDFFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E222103268005EDFFE /* Assets.xcassets */; };
@@ -66,6 +69,9 @@
 		DC5A2C34223A9349007BB7C2 /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		DC5A2C36223A94AA007BB7C2 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor-Extension.swift"; sourceTree = "<group>"; };
+		DC5A4699223FF4E000991636 /* HashtagVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagVC.swift; sourceTree = "<group>"; };
+		DC5A469B223FF6D400991636 /* HashtagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagCell.swift; sourceTree = "<group>"; };
+		DC5A469D22403B6900991636 /* UIViewController-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController-Extension.swift"; sourceTree = "<group>"; };
 		DC7571D822103267005EDFFE /* Instagram Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Instagram Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7571DB22103267005EDFFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC7571E022103267005EDFFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -157,6 +163,18 @@
 			path = MessagesViews;
 			sourceTree = "<group>";
 		};
+		DC5A469F22403B8400991636 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				DC7571EE221032D0005EDFFE /* UIView-Extension.swift */,
+				DC78179722208B7D006FAE47 /* Database-Extension.swift */,
+				DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */,
+				DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */,
+				DC5A469D22403B6900991636 /* UIViewController-Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		DC7571CF22103267005EDFFE = {
 			isa = PBXGroup;
 			children = (
@@ -195,13 +213,10 @@
 		DC7571ED221032D0005EDFFE /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				DC7571EE221032D0005EDFFE /* UIView-Extension.swift */,
-				DC78179722208B7D006FAE47 /* Database-Extension.swift */,
+				DC5A469F22403B8400991636 /* Extension */,
 				DC261D3F2220265900A06218 /* Protocols.swift */,
 				DC7817912220509E006FAE47 /* Constants.swift */,
 				DC7817A6222442CA006FAE47 /* CustomImageView.swift */,
-				DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */,
-				DC5A2C38223B0BED007BB7C2 /* UIColor-Extension.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -279,6 +294,7 @@
 			children = (
 				DC7817A82226C22F006FAE47 /* FeedCell.swift */,
 				DC7817AD222934CD006FAE47 /* CommentCell.swift */,
+				DC5A469B223FF6D400991636 /* HashtagCell.swift */,
 			);
 			path = FeedViews;
 			sourceTree = "<group>";
@@ -297,6 +313,7 @@
 			children = (
 				DCC346B7221449030004D591 /* FeedVC.swift */,
 				DC7817AB22293420006FAE47 /* CommentVC.swift */,
+				DC5A4699223FF4E000991636 /* HashtagVC.swift */,
 			);
 			path = Feed;
 			sourceTree = "<group>";
@@ -422,6 +439,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Instagram Clone/Pods-Instagram Clone-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/ActiveLabel/ActiveLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -431,6 +449,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActiveLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -476,6 +495,7 @@
 				DC5A2C35223A9349007BB7C2 /* ChatVC.swift in Sources */,
 				DC5A2C31223A88DE007BB7C2 /* NewMessageCell.swift in Sources */,
 				DCC346C822145DB30004D591 /* UserProfileHeader.swift in Sources */,
+				DC5A469E22403B6900991636 /* UIViewController-Extension.swift in Sources */,
 				DCC00005222946DE001D8CFD /* Comment.swift in Sources */,
 				DCC346B8221449030004D591 /* FeedVC.swift in Sources */,
 				DC78179822208B7D006FAE47 /* Database-Extension.swift in Sources */,
@@ -490,12 +510,14 @@
 				DC78179E2223FAE3006FAE47 /* SelectPhotoHeader.swift in Sources */,
 				DC7817A322242CC7006FAE47 /* Post.swift in Sources */,
 				DC7817AC22293420006FAE47 /* CommentVC.swift in Sources */,
+				DC5A469C223FF6D400991636 /* HashtagCell.swift in Sources */,
 				DC7571F6221032D0005EDFFE /* SignUpVC.swift in Sources */,
 				DC5A2C2C223A8046007BB7C2 /* MessageCell.swift in Sources */,
 				DCCF0E5122392BEE00F4F55F /* UIButton-Extension.swift in Sources */,
 				DC7817AE222934CD006FAE47 /* CommentCell.swift in Sources */,
 				DC5A2C37223A94AA007BB7C2 /* ChatCell.swift in Sources */,
 				DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */,
+				DC5A469A223FF4E000991636 /* HashtagVC.swift in Sources */,
 				DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */,
 				DCC346CA2216E6710004D591 /* User.swift in Sources */,
 				DC78179422206DCF006FAE47 /* FollowOrLikeVC.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import ActiveLabel
 
 class FeedCell: UICollectionViewCell {
     
@@ -97,7 +98,7 @@ class FeedCell: UICollectionViewCell {
     ///Кнопка отправить сообщением
     let messageButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "comment"), for: .normal)
+        button.setImage(UIImage(named: "send2"), for: .normal)
         button.tintColor = .black
         return button
     }()
@@ -122,8 +123,9 @@ class FeedCell: UICollectionViewCell {
     }()
     
     ///Текст описания поста
-    let descriptionLabel: UILabel = {
-        let label = UILabel()
+    let descriptionLabel: ActiveLabel = {
+        let label = ActiveLabel()
+        label.numberOfLines = 2
         return label
     }()
     
@@ -205,10 +207,29 @@ class FeedCell: UICollectionViewCell {
         
         guard let post = post else {return}
         
-        let attributedText = NSMutableAttributedString(string: user.username, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 12)])
-        attributedText.append(NSAttributedString(string: " \(post.description!)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)]))
+        //Настраиваем регулярное выражение на поиск имени в строке
+        let customType = ActiveType.custom(pattern: "^\(user.username!)\\b")
         
-        descriptionLabel.attributedText = attributedText
+        descriptionLabel.enabledTypes = [.mention, .hashtag, .url, customType]
+        
+        //Настраиваем имя пользователя на жирный шрифт, так как обычный attributedText для ActiveLabel не работает
+        descriptionLabel.configureLinkAttribute = { (type, attributesDict, isSelected) in
+            var attributes = attributesDict
+        
+            switch type {
+            case .custom:
+                attributes[NSAttributedString.Key.font] = UIFont.boldSystemFont(ofSize: 12)
+            default: ()
+            }
+            return attributes
+        }
+        
+        descriptionLabel.customize { (label) in
+            label.text = "\(user.username!) \(post.description!)"
+            label.customColor[customType] = .black
+            label.font = UIFont.systemFont(ofSize: 12)
+            label.textColor = .black
+        }
     }
     
     // MARK: - Обработка нажатия кнопок

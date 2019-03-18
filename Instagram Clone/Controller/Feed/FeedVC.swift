@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import ActiveLabel
 
 private let reuseIdentifier = "FeedCell"
 
@@ -42,13 +43,27 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         }
     }
     
+    //Чтобы на контроллерах куда мы переходим не было текста у кнопки назад
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     // MARK: - Настройка внешнего вида окна
     
     /// Настраивает кнопку LogOut
     private func configureNavigationBar() {
 
+        //Если просматривается только один пост то скрываем кнопки LogOut и Личных сообщений
         if !viewSinglePost {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "logout"), style: .plain, target: self, action: #selector(handleTapLogOut))
+            
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "send2"), style: .plain, target: self, action: #selector(handleTapSendMessage))
         }
         
         //Лого Интсаграмма в центре
@@ -58,8 +73,6 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         imageView.frame = titleView.bounds
         titleView.addSubview(imageView)
         self.navigationItem.titleView = titleView
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "send2"), style: .plain, target: self, action: #selector(handleTapSendMessage))
     }
 
     // MARK: - UICollectionViewDataSource
@@ -87,6 +100,10 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         else {
             cell.post = posts[indexPath.item]
         }
+        
+        handleTapHashtag(for: cell)
+        handleTapUserMention(for: cell)
+        handleTapUserNameInPostDescription(for: cell)
         
         return cell
     }
@@ -129,7 +146,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         present(alertController, animated: true, completion: nil)
     }
     
-    ///Нажата кнопка отправить сообщение
+    ///Нажата кнопка личные сообщения
     @objc func handleTapSendMessage() {
         
         let messagesVC = MessagesVC()
@@ -141,6 +158,41 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         posts.removeAll()
         fetchPosts()
         collectionView.reloadData()
+    }
+    
+    ///Нажат хэштег
+    func handleTapHashtag(for cell: FeedCell){
+        
+        cell.descriptionLabel.handleHashtagTap { (hashtag) in
+            
+            let hashtagVC = HashtagVC(collectionViewLayout: UICollectionViewFlowLayout())
+            hashtagVC.hashtag = hashtag.lowercased()
+            self.navigationController?.pushViewController(hashtagVC, animated: true)
+        }
+    }
+    
+    ///Нажато имя пользователя упомянутое в посте (например @ironman)
+    func handleTapUserMention(for cell: FeedCell) {
+        
+        cell.descriptionLabel.handleMentionTap { (mention) in
+            self.getMentionedUser(with: mention)
+        }
+    }
+    
+    ///Нажато имя пользователя в описании поста
+    func handleTapUserNameInPostDescription (for cell: FeedCell) {
+        
+        guard let user = cell.post?.user,
+              let username = user.username else {return}
+        
+        let customType = ActiveType.custom(pattern: "^\(username)\\b")
+        
+        cell.descriptionLabel.handleCustomTap(for: customType) { (username) in
+            
+            let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
+            userProfileVC.user = user
+            self.navigationController?.pushViewController(userProfileVC, animated: true)
+        }
     }
     
     // MARK: - Работа с Базой Данных

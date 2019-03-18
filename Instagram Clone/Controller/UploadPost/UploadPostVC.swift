@@ -97,7 +97,7 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                     print("Ошибка: Путь к фото пользователя равен nil - \(String(describing: error?.localizedDescription))")
                     return
                 }
-                
+
                 //Сохраняемые данные
                 let values = ["description" : postDescription,
                               "creationDate" : creationData,
@@ -106,19 +106,27 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                               "ownerID": currentID] as [String : Any]
                 //Идентификатор поста (Создается в соответствии с датой создания - так написано в документации)
                 let postID = POSTS_REF.childByAutoId()
-                
+
                 //Загружаем данные
                 postID.updateChildValues(values, withCompletionBlock: { (error, ref) in
                     //Если в updateChildValues написать postID.key то не будет работать, поэтому извлекаем
                     guard let postIdKey = postID.key else {return}
-                    
+
                     //Обновляем данные в таблице user-posts
                     //Добавляем к пользователю currentID идентифкатор нового созданного поста postID
                     USER_POSTS_REF.child(currentID).updateChildValues([postIdKey : 1])
+
+                    //Обновляем таблицу постов с хэштегами
+                    self.uploadHashtag(with: postIdKey)
                     
+                    //Загружаем уведомление об упоминании в описании поста
+                    if postDescription.contains("@") {
+                        self.uploadMentionsNotification(for: postIdKey, with: postDescription, notificationType: .PostMention)
+                    }
+
                     //Обновляем ленту новостей подписчиков и самого пользователя
                     self.updateUsersFeeds(with: postIdKey)
-                    
+
                     //Возвращаемся на новостную ленту
                     self.dismiss(animated: true, completion: {
                         self.tabBarController?.selectedIndex = 0
@@ -159,5 +167,35 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         sharePostButton.isEnabled = true
         sharePostButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
         
+    }
+    
+    // MARK: - Работа с БД
+    /// Заголовок
+    ///
+    /// - Parameters:
+    ///     - str: Параметр
+    /// - Returns:
+    ///     Возвращаемое значение
+    
+    ///Загружает новый пост с хэштегом в БД
+    /// - Parameters:
+    ///     - postID: Идентификатор поста с хэштегом
+    private func uploadHashtag(with postID: String){
+        
+        guard let description = descriptionTextForPhoto.text else {return}
+        
+        //Разеделяем описание поста на слова которые начинаются с символа #
+        let words = description.components(separatedBy: .whitespacesAndNewlines)
+        
+        for var word in words {
+            if word.hasPrefix("#"){
+                word = word.trimmingCharacters(in: .punctuationCharacters)
+                word = word.trimmingCharacters(in: .symbols)
+                
+                let hashtagValues = [postID : 1]
+                
+                HASHTAG_POST_REF.child(word.lowercased()).updateChildValues(hashtagValues)
+            }
+        }
     }
 }
