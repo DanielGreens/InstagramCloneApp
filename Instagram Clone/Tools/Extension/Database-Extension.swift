@@ -12,7 +12,7 @@ extension Database {
     
     ///Загружает информацию о пользователе
     /// - Parameters:
-    ///     - userID: Идентификатор пользователя, информация о котором нужно загрузить
+    ///     - userID: Идентификатор пользователя, информацию о котором нужно загрузить
     ///     - completion: Блок кода который вызывается после отработки метода
     static func fetchUser(with userID: String, completion: @escaping(User) -> ()){
         

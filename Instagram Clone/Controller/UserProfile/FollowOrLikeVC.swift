@@ -42,6 +42,10 @@ class FollowLikeVC: UITableViewController {
     var userID: String?
     ///Массив пользователей
     var users = [User]()
+    ///Идентификато последнего загруженного подписчика или подписки
+    var lastfollowUserID: String?
+    ///Идентификато последнего загруженного пользователя лайкнувшего пост
+    var lastLikesUserID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +59,7 @@ class FollowLikeVC: UITableViewController {
         
         configureNavigationBarTitle(by: viewingMode)
         
-        fetchUsers(by: viewingMode)
+        fetchUsers()
     }
     
     // MARK: - Table view data source
@@ -92,33 +96,87 @@ class FollowLikeVC: UITableViewController {
         navigationController?.pushViewController(userProfileVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if users.count > 11 {
+            if indexPath.row == users.count - 1 {
+                fetchUsers()
+            }
+        }
+    }
+    
     // MARK: - Работа с БД
     
     ///Получает необходимый список пользователей в зависимости от режима просмотра экрана
     /// - Parameters:
     ///     - viewingMode: Режима просмотра экрана
-    private func fetchUsers(by viewingMode: ViewingMode) {
+    private func fetchUsers() {
         guard let ref = getDatabaseReference() else {return}
+        guard let viewingMode = self.viewingMode else {return}
         
         switch viewingMode {
         case .Followers, .Following:
             guard let userID = self.userID else {return}
-            //Получаем ID подписчиков или подписок
-            ref.child(userID).observeSingleEvent(of: .value) { (dataFromDB) in
-                
-                guard let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
-                
-                allObjects.forEach({ (data) in
-                    let uid = data.key
-                    self.fetchUser(with: uid)
-                })
+            //Первоначальная загрузка данных
+            if lastfollowUserID == nil {
+                ref.child(userID).queryLimited(toLast: 15).observeSingleEvent(of: .value) { (dataFromDB) in
+                    
+                    guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                        let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                    
+                    allObjects.forEach({ (data) in
+                        let userID = data.key
+                        self.fetchUser(with: userID)
+                    })
+                    self.lastfollowUserID = first.key
+                }
             }
+            //Дополнительная порция данных
+            else {
+                ref.queryOrderedByKey().queryEnding(atValue: lastfollowUserID).queryLimited(toLast: 7).observeSingleEvent(of: .value) { (dataFromDB) in
+                    
+                    guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                        let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                    
+                    allObjects.forEach({ (data) in
+                        if data.key != self.lastfollowUserID {
+                            self.fetchUser(with: data.key)
+                        }
+                    })
+                    self.lastfollowUserID = first.key
+                }
+            }
+            
         case .Likes:
             guard let postId = postID else {return}
-            ref.child(postId).observe(.childAdded) { (dataFromDB) in
-                
-                let userID = dataFromDB.key
-                self.fetchUser(with: userID)
+            //Первоначальная загрузка данных
+            if lastLikesUserID == nil {
+                ref.child(postId).queryLimited(toLast: 15).observeSingleEvent(of: .value) { (dataFromDB) in
+                    
+                    guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                        let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                    
+                    allObjects.forEach({ (data) in
+                        let userID = data.key
+                        self.fetchUser(with: userID)
+                    })
+                    self.lastLikesUserID = first.key
+                }
+            }
+            //Дополнительная порция данных
+            else {
+                ref.queryOrderedByKey().queryEnding(atValue: lastLikesUserID).queryLimited(toLast: 7).observeSingleEvent(of: .value) { (dataFromDB) in
+                    
+                    guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                        let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                    
+                    allObjects.forEach({ (data) in
+                        if data.key != self.lastLikesUserID {
+                            self.fetchUser(with: data.key)
+                        }
+                    })
+                    self.lastLikesUserID = first.key
+                }
             }
         }
     }

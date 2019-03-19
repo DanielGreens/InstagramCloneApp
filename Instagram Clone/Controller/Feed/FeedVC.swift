@@ -22,6 +22,8 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var viewSinglePost = false
     ///Информация о выбранном посте
     var post: Post?
+    ///Идентификато последнего загруженного поста
+    var lastLoadPostID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -108,6 +110,17 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         return cell
     }
     
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        //Если в ленте у пользователя меньше 5 постов, то загружать новые не стоит
+        if posts.count > 4 {
+            //Когда видим предпоследний пост, загружаем новую пачку постов
+            if indexPath.item == posts.count - 1 {
+                fetchPosts()
+            }
+        }
+    }
+    
     // MARK: - UICollectionViewDelegateFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -156,6 +169,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     ///Обновляет содержимое коллекции
     @objc func handleRefresh() {
         posts.removeAll()
+        lastLoadPostID = nil
         fetchPosts()
         collectionView.reloadData()
     }
@@ -202,25 +216,57 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         
         guard let currentUserID = Auth.auth().currentUser?.uid else{return}
         
-        USER_FEED_REF.child(currentUserID).observe(.childAdded) { (dataFromDB) in
-            
-            let postID = dataFromDB.key
-            
-            Database.fetchPost(with: postID, completion: { (post) in
-                
-                self.posts.append(post)
-                
-                //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
-                self.posts.sort(by: { (post1, post2) -> Bool in
-                    return post1.creationDate > post2.creationDate
-                })
-                
+        //Первоначальная загрузка первых 5 постов
+        if lastLoadPostID == nil {
+            USER_FEED_REF.child(currentUserID).queryLimited(toLast: 5).observeSingleEvent(of: .value) { (dataFromDB) in
                 //Останаливаем контрол обновления коллекции
                 self.collectionView.refreshControl?.endRefreshing()
-                
-                self.collectionView.reloadData()
-            })
+                //Получаем идентификатор последнего загруженного поста и идентификаторы всех полученных постов
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                allObjects.forEach({ (data) in
+                    let postID = data.key
+                    self.fetchPost(with: postID)
+                })
+                self.lastLoadPostID = first.key
+            }
         }
+        //Иначе подгружаем следующие 6 постов начиная с lastLoadPostID
+        else {
+            //Сначала сортируем записи по времени по идентификаторам queryOrderedByKey, и получаем 6 записей начиная с lastLoadPostID
+            USER_FEED_REF.child(currentUserID).queryOrderedByKey().queryEnding(atValue: self.lastLoadPostID).queryLimited(toLast: 6).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                //Получаем идентификатор последнего загруженного поста и идентификаторы всех полученных постов
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    //Исключаем из загрузки последний загруженный пост и первый загруженный пост из новой пачки, так как они одинаковые (Тот пост на котором закончили последнюю загрузку, будет первым загруженным постом из новой загрузки)
+                    if data.key != self.lastLoadPostID {
+                        self.fetchPost(with: data.key)
+                    }
+                })
+                
+                self.lastLoadPostID = first.key
+            }
+        }
+    }
+    
+    /// Загружает данные о публикации
+    ///
+    /// - Parameters:
+    ///     - postID: Идентификатор загружаемого поста
+    private func fetchPost(with postID: String) {
+        Database.fetchPost(with: postID, completion: { (post) in
+            self.posts.append(post)
+            
+            //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
+            self.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate > post2.creationDate
+            })
+            
+            self.collectionView.reloadData()
+        })
     }
 }
 

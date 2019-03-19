@@ -23,6 +23,8 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     var user: User?
     ///Данные о постах пользователя
     var posts = [Post]()
+    ///Идентификато последнего загруженного поста
+    var lastLoadPostID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +84,15 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         navigationController?.pushViewController(feedVC, animated: true)
     }
     
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if posts.count > 11 {
+            if indexPath.item == posts.count - 1 {
+                fetchUserPosts()
+            }
+        }
+    }
+    
     // MARK: - UICollectionViewDelegateFlowLayout
     
     //Создаем размер области где будет информация о пользователе
@@ -124,7 +135,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         }
     }
     
-    ///Загружаем посты пользователя
+    ///Загружает посты пользователя
     private func fetchUserPosts() {
         
         var userID: String!
@@ -136,24 +147,58 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             userID = Auth.auth().currentUser?.uid
         }
         
-        //Создаем постоянного наблюдателя за обновлением данных. Если в БД добавится новый пост, данные обгновятся здесь автоматически
-        USER_POSTS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
-            
-            let postID = dataFromDB.key
-            
-            Database.fetchPost(with: postID, completion: { (post) in
+        //Первоначальная загрузка данных
+        if lastLoadPostID == nil {
+            USER_POSTS_REF.child(userID).queryLimited(toLast: 12).observeSingleEvent(of: .value) { (dataFromDB) in
+                self.collectionView.refreshControl?.endRefreshing()
                 
-                self.posts.append(post)
+                //Получаем идентификатор последнего загруженного поста и идентификаторы всех полученных постов
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
                 
-                //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
-                self.posts.sort(by: { (post1, post2) -> Bool in
-                    return post1.creationDate > post2.creationDate
+                allObjects.forEach({ (data) in
+                    let postID = data.key
+                    self.fetchPost(with: postID)
                 })
+                self.lastLoadPostID = first.key
+            }
+        }
+        //Дополнительная порция данных
+        else {
+            USER_POSTS_REF.child(userID).queryOrderedByKey().queryEnding(atValue: lastLoadPostID).queryLimited(toLast: 7).observeSingleEvent(of: .value) { (dataFromDB) in
                 
-                self.collectionView.reloadData()
-            })
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    if data.key != self.lastLoadPostID {
+                        self.fetchPost(with: data.key)
+                    }
+                })
+                self.lastLoadPostID = first.key
+            }
         }
     }
+    
+    /// Загружает данные о публикации
+    ///
+    /// - Parameters:
+    ///     - postID: Идентификатор загружаемого поста
+    private func fetchPost(with postID: String) {
+        Database.fetchPost(with: postID, completion: { (post) in
+            self.posts.append(post)
+            
+            //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
+            self.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate > post2.creationDate
+            })
+            
+            self.collectionView.reloadData()
+        })
+    }
+    
+    // MARK: - Вспомогательные функции
+    
 }
 
 // MARK: - Реализация протокола UserProfileHeaderDelegate

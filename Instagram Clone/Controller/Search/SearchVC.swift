@@ -29,6 +29,10 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
     var collectionViewEnabled = true
     ///Фотографии постов
     var posts = [Post]()
+    ///Идентификато последнего загруженного поста
+    var lastLoadPostID: String?
+    ///Идентификато последнего загруженного пользователя
+    var lastLoadUserID: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +107,15 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
         navigationController?.pushViewController(userProfileVC, animated: true)
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if posts.count > 17 {
+            if indexPath.row == posts.count - 1 {
+                fetchPosts()
+            }
+        }
+    }
+    
     // MARK: - UISearchBar
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -158,35 +171,95 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
     
     ///Загружает данные о пользователях из БД
     private func fetchUsers() {
-        
-        USER_REF.observe(.childAdded) { (dataFromDB) in
-            //Этот блок вызывается для каждого пользователя
-            
-            guard let dictionary = dataFromDB.value as? Dictionary<String, AnyObject> else {return}
-            //Уникальный идентификатор пользователя
-            let uid = dataFromDB.key
-            
-            let user = User(uid: uid, dictionary: dictionary)
-            
-            self.users.append(user)
-            self.tableView.reloadData()
+        //Первоначальная загрузка данных
+        if lastLoadUserID == nil {
+            USER_REF.queryLimited(toLast: 12).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    let userID = data.key
+                    self.fetchUser(with: userID)
+                })
+                self.lastLoadUserID = first.key
+            }
+        }
+        //Дополнительная порция данных
+        else {
+            USER_REF.queryOrderedByKey().queryEnding(atValue: lastLoadPostID).queryLimited(toLast: 7).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    if data.key != self.lastLoadPostID {
+                        self.fetchUser(with: data.key)
+                    }
+                })
+                self.lastLoadUserID = first.key
+            }
         }
     }
     
     ///Загружаем фото всех постов
     private func fetchPosts() {
         
-        posts.removeAll()
-        
-        POSTS_REF.observe(.childAdded) { (dataFromDB) in
-            
-            let postID = dataFromDB.key
-            
-            Database.fetchPost(with: postID, completion: { (post) in
+        //Первоначальная загрузка данных
+        if lastLoadPostID == nil {
+            POSTS_REF.queryLimited(toLast: 18).observeSingleEvent(of: .value) { (dataFromDB) in
                 
-                self.posts.append(post)
-                self.collectionView.reloadData()
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    let postID = data.key
+                    self.fetchPost(with: postID)
+                })
+                self.lastLoadPostID = first.key
+            }
+        }
+        //Дополнительная порция данных
+        else {
+            POSTS_REF.queryOrderedByKey().queryEnding(atValue: lastLoadPostID).queryLimited(toLast: 7).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
+                    let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
+                
+                allObjects.forEach({ (data) in
+                    if data.key != self.lastLoadPostID {
+                        self.fetchPost(with: data.key)
+                    }
+                })
+                self.lastLoadPostID = first.key
+            }
+        }
+    }
+    
+    /// Загружает данные о публикации
+    ///
+    /// - Parameters:
+    ///     - postID: Идентификатор загружаемого поста
+    private func fetchPost(with postID: String) {
+        Database.fetchPost(with: postID, completion: { (post) in
+            self.posts.append(post)
+            
+            //Сортируем посты по дате создания (Старые посты в конец, новые вперед)
+            self.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate > post2.creationDate
             })
+            
+            self.collectionView.reloadData()
+        })
+    }
+    
+    ///Загружает информацию о пользователе
+    /// - Parameters:
+    ///     - userID: Идентификатор пользователя, информацию о котором нужно загрузить
+    private func fetchUser(with userID: String) {
+        Database.fetchUser(with: userID) { (user) in
+            self.users.append(user)
+            self.tableView.reloadData()
         }
     }
 
@@ -250,4 +323,12 @@ extension SearchVC : UICollectionViewDelegate, UICollectionViewDataSource, UICol
         navigationController?.pushViewController(feedVC, animated: true)
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if users.count > 11 {
+            if indexPath.item == users.count - 1{
+                fetchUsers()
+            }
+        }
+    }
 }

@@ -121,7 +121,7 @@ class NotificationCell: UITableViewCell {
         
         var anchor: NSLayoutXAxisAnchor!
         
-        //notification.type = Лайк или Комментарий
+        //notification.type = все кроме подписки нового пользователя
         if notification.type != .Follow {
             addSubview(postImageView)
             postImageView.setPosition(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 40, height: 40)
