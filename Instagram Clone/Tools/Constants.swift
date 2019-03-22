@@ -17,7 +17,7 @@ let STORAGE_REF = Storage.storage().reference()
 
 // MARK: - Ссылки на необходимые места в Хранилище
 
-/// Ссылка на хранилище пользовательских изображений
+/// Ссылка на хранилище пользовательских изображений (аватаров)
 let STORAGE_PROFILE_IMAGES_REF = STORAGE_REF.child("profile_images")
 /// Ссылка на хранилище пользовательских изображений
 let STORAGE_POST_IMAGES_REF = STORAGE_REF.child("post_images")

@@ -14,9 +14,32 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
     
     // MARK: - Свойства
     
+    ///Варианты отображения кнопки
+    enum UploadAction: Int {
+        ///Загрузить пост
+        case UploadPost
+        ///Сохранить изменения
+        case SaveChanges
+        
+        init(index: Int) {
+            switch index {
+            case 0:
+                self = .UploadPost
+            case 1:
+                self = .SaveChanges
+            default:
+                self = .UploadPost
+            }
+        }
+    }
+    var uploadAction: UploadAction!
+    
+    ///Информация о редактируемом посте
+    var post: Post?
+    
     ///Выбранная пользователем фотография
-    let photoImageView: UIImageView = {
-        let photo = UIImageView()
+    let photoImageView: CustomImageView = {
+        let photo = CustomImageView()
         photo.contentMode = .scaleAspectFill
         photo.clipsToBounds = true
         photo.backgroundColor = .lightGray
@@ -32,14 +55,13 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
     }()
     
     ///Кнопка опубликовать
-    lazy var sharePostButton: UIButton = {
+    lazy var actionButton: UIButton = {
         let button = UIButton(type: .system)
         button.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
-        button.setTitle("Опубликовать", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 5
         button.isEnabled = false
-        button.addTarget(self, action: #selector(handleTapShareButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleTapButton), for: .touchUpInside)
         return button
     }()
 
@@ -48,8 +70,22 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
 
         view.backgroundColor = .white
         configureViewComponents()
-        
         descriptionTextForPhoto.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if uploadAction == .SaveChanges {
+            guard let post = post else {return}
+            navigationItem.title = "Редактирование поста"
+            actionButton.setTitle("Сохранить изменения", for: .normal)
+            photoImageView.loadImage(with: post.imageURL)
+            descriptionTextForPhoto.text = post.description
+        }
+        else {
+            actionButton.setTitle("Опубликовать", for: .normal)
+        }
     }
     
     // MARK: - Настройка внешнего вида окна
@@ -66,13 +102,45 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         descriptionTextForPhoto.setPosition(top: view.topAnchor, left: photoImageView.rightAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 102, paddingLeft: 12, paddingBottom: 0, paddingRight: 12, width: 0, height: 100)
         
         //Кнопка опубликовать
-        view.addSubview(sharePostButton)
-        sharePostButton.setPosition(top: photoImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 24, paddingBottom: 0, paddingRight: 24, width: 0, height: 40)
+        view.addSubview(actionButton)
+        actionButton.setPosition(top: photoImageView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, paddingTop: 12, paddingLeft: 24, paddingBottom: 0, paddingRight: 24, width: 0, height: 40)
     }
     
     // MARK: - Обработка нажатий
     
-    @objc func handleTapShareButton() {
+    @objc func handleTapButton() {
+        
+        buttonSelector(uploadAction: uploadAction)
+    }
+    
+    ///В зависимости от типа кнопки, вызывает необходимую функцию
+    private func buttonSelector(uploadAction: UploadAction) {
+        switch uploadAction {
+        case .UploadPost:
+            uploadPost()
+        case .SaveChanges:
+            saveEditChanges()
+        }
+    }
+    
+    // MARK: - UITextViewDelegate
+    
+    func textViewDidChange(_ textView: UITextView) {
+        
+        guard !textView.text.isEmpty else {
+            actionButton.isEnabled = false
+            actionButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
+            return
+        }
+        actionButton.isEnabled = true
+        actionButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
+        
+    }
+    
+    // MARK: - Работа с БД
+    
+    ///Загружает созданный пост на сервер
+    private func uploadPost() {
         
         guard let postDescription = descriptionTextForPhoto.text, let postImage = photoImageView.image, let currentID = Auth.auth().currentUser?.uid else {return}
         
@@ -97,7 +165,7 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                     print("Ошибка: Путь к фото пользователя равен nil - \(String(describing: error?.localizedDescription))")
                     return
                 }
-
+                
                 //Сохраняемые данные
                 let values = ["description" : postDescription,
                               "creationDate" : creationData,
@@ -106,16 +174,16 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                               "ownerID": currentID] as [String : Any]
                 //Идентификатор поста (Создается в соответствии с датой создания - так написано в документации)
                 let postID = POSTS_REF.childByAutoId()
-
+                
                 //Загружаем данные
                 postID.updateChildValues(values, withCompletionBlock: { (error, ref) in
                     //Если в updateChildValues написать postID.key то не будет работать, поэтому извлекаем
                     guard let postIdKey = postID.key else {return}
-
+                    
                     //Обновляем данные в таблице user-posts
                     //Добавляем к пользователю currentID идентифкатор нового созданного поста postID
                     USER_POSTS_REF.child(currentID).updateChildValues([postIdKey : 1])
-
+                    
                     //Обновляем таблицу постов с хэштегами
                     self.uploadHashtag(with: postIdKey)
                     
@@ -123,10 +191,10 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
                     if postDescription.contains("@") {
                         self.uploadMentionsNotification(for: postIdKey, with: postDescription, notificationType: .PostMention)
                     }
-
+                    
                     //Обновляем ленту новостей подписчиков и самого пользователя
                     self.updateUsersFeeds(with: postIdKey)
-
+                    
                     //Возвращаемся на новостную ленту
                     self.dismiss(animated: true, completion: {
                         self.tabBarController?.selectedIndex = 0
@@ -136,7 +204,19 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         }
     }
     
-    // MARK: - Вспомогательные функции
+    ///Сохраняет сделанные изменения для поста
+    private func saveEditChanges() {
+        
+        guard let post = post,
+              let description = descriptionTextForPhoto.text else {return}
+        
+        //Обновляем описание поста
+        POSTS_REF.child(post.postID).child("description").setValue(description) { (error, ref) in
+            self.navigationController?.popViewController(animated: true)
+        }
+        //Если описание поста содержит хэштег, то мы добавим его
+        uploadHashtag(with: post.postID)
+    }
     
     ///Обновляет ленту подписчиков добавленной публикацией текущего пользователя
     private func updateUsersFeeds(with postID: String) {
@@ -155,29 +235,7 @@ class UploadPostVC: UIViewController, UITextViewDelegate {
         USER_FEED_REF.child(currentUserID).updateChildValues(values)
     }
     
-    // MARK: - UITextViewDelegate
-    
-    func textViewDidChange(_ textView: UITextView) {
-        
-        guard !textView.text.isEmpty else {
-            sharePostButton.isEnabled = false
-            sharePostButton.backgroundColor = UIColor(red: 149/255, green: 204/255, blue: 244/255, alpha: 1)
-            return
-        }
-        sharePostButton.isEnabled = true
-        sharePostButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
-        
-    }
-    
-    // MARK: - Работа с БД
-    /// Заголовок
-    ///
-    /// - Parameters:
-    ///     - str: Параметр
-    /// - Returns:
-    ///     Возвращаемое значение
-    
-    ///Загружает новый пост с хэштегом в БД
+    ///Если в описании поста есть хэштег, то он будет добавлен в БД
     /// - Parameters:
     ///     - postID: Идентификатор поста с хэштегом
     private func uploadHashtag(with postID: String){

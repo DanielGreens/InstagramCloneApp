@@ -11,6 +11,8 @@ import Firebase
 
 class Message {
     
+    // MARK: - Свойства
+    
     ///Текст сообщения
     var messageText: String!
     ///От какого пользователя
@@ -19,6 +21,8 @@ class Message {
     var toUserID: String!
     ///Дата сообщения
     var creationDate: Date!
+    
+    // MARK: - Инициализатор
     
     init(dictionary: Dictionary<String, AnyObject>) {
         
@@ -38,6 +42,8 @@ class Message {
             self.creationDate = Date(timeIntervalSince1970: date)
         }
     }
+    
+    // MARK: - Методы
     
     ///Получает данные о пользователе с которым идет переписка
     /// - Returns:

@@ -160,7 +160,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
             //Уникальный ID изображения
             let imageUniquePath = NSUUID().uuidString
             //Путь для сохранения фото пользователя с уникальным именем для изображения
-            let storageRef = Storage.storage().reference().child("profile_images").child(imageUniquePath)
+            let storageRef = STORAGE_PROFILE_IMAGES_REF.child(imageUniquePath)
             
             //Загружаем фото на сервер в Storage
             storageRef.putData(uploadData, metadata: nil, completion: { (metadata, error) in
@@ -188,7 +188,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     let values = [uid: dictionaryValues]
                     
                     //Сохраняем данные пользователя в базу данных
-                    Database.database().reference().child("users").updateChildValues(values, withCompletionBlock: { (error, ref) in
+                    USER_REF.updateChildValues(values, withCompletionBlock: { (error, ref) in
                         
                         //В AppDelegate мы прописали что нашим стартовым экраном будет MainTabVC. Если при проверке авторизирован ли пользователь, окажется что он не авторизирован, то в стек контроллеров будет добавлен текущий контроллер LoginVC, а затем и SignUpVC. Здесь мы знаем, что регистраций нового пользователя прошла успешно, поэтому мы возвращаемся к главному экрану приложения MainTabVC
                         guard let mainTabVC = UIApplication.shared.keyWindow?.rootViewController as? MainTabVC else {return}

@@ -11,14 +11,10 @@ import Foundation
 
 class Notification {
     
+    // MARK: - Свойства
+    
     ///Дата создания уведомления
     var creationDate: Date!
-    
-    ///Идентификатор пользователя оставившего уведомление
-//    var userID: String!
-    
-    ///Идентификатор поста для которого сделано уведомление
-//    var postID: String?
     
     ///Тип уведомления
     var type: NotificationType!
@@ -31,6 +27,8 @@ class Notification {
     
     ///Увидел ли текущий пользователь это уведомление
     var didCheck = false
+    
+    // MARK: - Инициализатор
     
     init(user: User, post: Post? = nil, dictionary: Dictionary<String, AnyObject>) {
         
@@ -51,8 +49,6 @@ class Notification {
         if let check = dictionary["checked"] as? Int {
             self.didCheck = check == 0 ? false : true
         }
-        
-        
     }
     
 }

@@ -34,6 +34,11 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         //Регестрируем ячейки на соответствующие классы и присваиваем им уникальные идентификаторы
         self.collectionView!.register(UserPostCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
+        
+        //Настраиваем контрол обновления ленты
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
 
         if user == nil {
             fetchUserData()
@@ -80,6 +85,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         
         feedVC.viewSinglePost = true
         feedVC.post = posts[indexPath.row]
+        feedVC.userProfileVC = self
         
         navigationController?.pushViewController(feedVC, animated: true)
     }
@@ -117,7 +123,7 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     // MARK: - Работа с Базой данных
     
     /// Получает данные текущего пользователя из БД
-    private func fetchUserData() {
+    func fetchUserData() {
         
         //Получаем уникальный идентификатор текущего пользователя
         guard let currentUserID = Auth.auth().currentUser?.uid else {return}
@@ -199,6 +205,14 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     // MARK: - Вспомогательные функции
     
+    ///Обновляем данные экрана
+    @objc public func handleRefresh() {
+        posts.removeAll()
+        lastLoadPostID = nil
+        fetchUserPosts()
+        collectionView.reloadData()
+    }
+    
 }
 
 // MARK: - Реализация протокола UserProfileHeaderDelegate
@@ -210,7 +224,11 @@ extension UserProfileVC : UserProfileHeaderDelegate {
         guard let user = header.user else {return}
         
         if header.editProfileOrFollowButton.titleLabel?.text == "Редактировать профиль" {
-            
+            let editProfileVC = EditProfileVC()
+            editProfileVC.user = user
+            editProfileVC.userProfileVC = self
+            let navigationController = UINavigationController(rootViewController: editProfileVC)
+            present(navigationController, animated: true, completion: nil)
         }
         else{
             if header.editProfileOrFollowButton.titleLabel?.text == "Подписаться" {

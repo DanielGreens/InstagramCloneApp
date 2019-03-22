@@ -10,6 +10,8 @@ import Firebase
 
 class Comment {
     
+    // MARK: - Свойства
+    
     ///Идентифкатор комментария
     var commentID: String!
     ///Текст комментария
@@ -18,6 +20,8 @@ class Comment {
     var creationDate: Date!
     ///Пользователь опубликовавший комментарий
     var user: User?
+    
+    // MARK: - Инициализатор
     
     init(commentID: String, user: User, dictionary: Dictionary<String, AnyObject>) {
         

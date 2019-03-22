@@ -33,6 +33,11 @@ class NotificationVC: UITableViewController {
         
         tableView.register(NotificationCell.self, forCellReuseIdentifier: reuseIdentifier)
         
+        //Настраиваем контроль обновления ленты
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+        
         fetchNotifications()
     }
     
@@ -88,6 +93,8 @@ class NotificationVC: UITableViewController {
         //Первоначальная загрузка данных
         if lastLoadNotificationID == nil {
             NOTIFICATONS_REF.child(currentUserID).queryLimited(toLast: 15).observeSingleEvent(of: .value) { (dataFromDB) in
+                
+                self.tableView.refreshControl?.endRefreshing()
                 
                 guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
                     let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
@@ -148,9 +155,6 @@ class NotificationVC: UITableViewController {
         })
     }
     
-    // MARK: - Обработка нажатия кнопок
-    
-    
     // MARK: - Вспомогательные функции
     
     ///Сортирует массив уведомление по дате
@@ -167,6 +171,14 @@ class NotificationVC: UITableViewController {
         self.timer?.invalidate()
         
         self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(sortNotifications), userInfo: nil, repeats: false)
+    }
+    
+    ///Обновляем данные экрана
+    @objc public func handleRefresh() {
+        notifications.removeAll()
+        lastLoadNotificationID = nil
+        fetchNotifications()
+        tableView.reloadData()
     }
 }
 

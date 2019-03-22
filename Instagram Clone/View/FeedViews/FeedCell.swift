@@ -134,7 +134,6 @@ class FeedCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 10)
         label.textColor = .lightGray
-        label.text = "2 ДНЯ НАЗАД"
         return label
     }()
     
@@ -183,7 +182,7 @@ class FeedCell: UICollectionViewCell {
         descriptionLabel.setPosition(top: likesLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         
         addSubview(postTimeLabel)
-        postTimeLabel.setPosition(top: descriptionLabel.bottomAnchor, left: leftAnchor, bottom: nil, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        postTimeLabel.setPosition(top: descriptionLabel.bottomAnchor, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 0, width: 0, height: 0)
     }
     
     ///Настраиваем панель кнопок взаимодействия с публикацией
@@ -230,6 +229,8 @@ class FeedCell: UICollectionViewCell {
             label.font = UIFont.systemFont(ofSize: 12)
             label.textColor = .black
         }
+        
+        postTimeLabel.text = post.creationDate.timeAgoToDisplay()
     }
     
     // MARK: - Обработка нажатия кнопок

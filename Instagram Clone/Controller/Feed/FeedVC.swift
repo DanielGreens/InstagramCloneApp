@@ -24,6 +24,8 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var post: Post?
     ///Идентификато последнего загруженного поста
     var lastLoadPostID: String?
+    ///Ссылка на экран профиля пользователя
+    var userProfileVC: UserProfileVC?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -125,8 +127,8 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = view.frame.width
-        //Так как мы хотим чтобы картинка в ячейке была квадратной, то к ширине экрана мы добавляем высоту верхней части поста (16 = 8+8 отсутпы от аватара пользователя сверху и снизу и 40 - размет аватара пользователя, 50 - размер панели для кнопок, 50 - для описания фотографии и прочего
-        let height = width + 16 + 40 + 50 + 60
+        //Так как мы хотим чтобы картинка в ячейке была квадратной, то к ширине экрана мы добавляем высоту верхней части поста (16 = 8+8 отсутпы от аватара пользователя сверху и снизу и 40 - размет аватара пользователя, 50 - размер панели для кнопок, 80 - для описания фотографии и прочего
+        let height = width + 16 + 40 + 50 + 80
         
         return CGSize(width: width, height: height)
     }
@@ -285,8 +287,46 @@ extension FeedVC : FeedCellDelegate {
     }
     
     func handleTapOption(for cell: FeedCell) {
-        print("Детали")
-
+        
+        guard let post = cell.post else {return}
+        
+        //Если это пост текущего пользователя
+        if post.ownerID == Auth.auth().currentUser?.uid {
+            
+            let alertController = UIAlertController(title: "Опции", message: nil, preferredStyle: .actionSheet)
+            
+            alertController.addAction(UIAlertAction(title: "Редактировать пост", style: .default, handler: { (_) in
+                
+                let uploadPostVC = UploadPostVC()
+                uploadPostVC.post = post
+                uploadPostVC.uploadAction = UploadPostVC.UploadAction.SaveChanges
+                self.navigationController?.pushViewController(uploadPostVC, animated: true)
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Удалить пост", style: .destructive, handler: { (_) in
+                
+                post.deletePost()
+                
+                //Если пост удаляется в ленте, то обновляем ее после удаления
+                if !self.viewSinglePost {
+                    self.handleRefresh()
+                }
+                //Если просматривается один пост, то после удаления возвращаемся назад
+                else {
+                    //Так как у нас есть ссылка на профиль пользователя, то мы автоматически обновляем содержимое таблицы, чтобы исключить удаленный пост
+                    if let userProfileVC = self.userProfileVC {
+                        self.navigationController?.popViewController(animated: true)
+                        userProfileVC.handleRefresh()
+                        self.handleRefresh()
+                    }
+                }
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Закрыть", style: .cancel, handler: nil))
+            
+            present(alertController, animated: true, completion: nil)
+        }
+        
     }
     
     func handleTapLike(for cell: FeedCell, isDoubleTap: Bool) {

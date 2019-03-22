@@ -9,6 +9,9 @@ import Foundation
 import Firebase
 
 class Post {
+    
+    // MARK: - Свойства
+    
     ///Описание поста
     var description: String!
     ///Количество лайков
@@ -25,6 +28,8 @@ class Post {
     var user: User?
     ///Лайкнул ли пользователь этот пост
     var didLike = false
+    
+    // MARK: - Инициализатор
     
     init(postID: String, user: User, dictionary: Dictionary<String, AnyObject>) {
         
@@ -52,6 +57,8 @@ class Post {
             self.creationDate = Date(timeIntervalSince1970: creationDate)
         }
     }
+    
+    // MARK: - Методы
     
     /// Устанавливает или снимает лайк
     ///
@@ -129,6 +136,79 @@ class Post {
             notificationRef.updateChildValues(values) { (error, dataFromDB) in
                 //Затем добавляем в таблицу user-likes к лайкнутому посту созданное уведомление по его ID
                 USER_LIKES_REF.child(currentUserID).child(self.postID).setValue(notificationRef.key)
+            }
+        }
+    }
+    
+    ///Удаляет пост из БД и все связанные с этим постом данные
+    public func deletePost() {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid else {return}
+        
+        //Удаляем изображение из хранилища
+        Storage.storage().reference(forURL: self.imageURL).delete(completion: nil)
+        
+        //Просматривает подписчиков пользователя
+        USER_FOLLOWERS_REF.child(currentUserID).observe(.childAdded) { (snapshot) in
+            let followerUid = snapshot.key
+            //Удаляем из ленты каждого подписчика пост, который удаляется
+            USER_FEED_REF.child(followerUid).child(self.postID).removeValue()
+            self.deleteNotificationAssociatedWithDeletedPost(userID: followerUid)
+        }
+        //Удаляем пост из ленты текущего пользователя
+        USER_FEED_REF.child(currentUserID).child(postID).removeValue()
+        //Удаляем пост
+        USER_POSTS_REF.child(currentUserID).child(postID).removeValue()
+        
+        //Смотрим кто лайкнул удаляемый пост
+        POST_LIKES_REF.child(postID).observe(.childAdded) { (dataFromDB) in
+            let userID = dataFromDB.key
+            //Получаем идентификатор уведомления связанного с этим постом
+            USER_LIKES_REF.child(userID).child(self.postID).observeSingleEvent(of: .value, with: { (data) in
+                guard let notificationID = data.value as? String else {return}
+                //Удаляем уведомление о лайках связанные с удаляемым постом
+                NOTIFICATONS_REF.child(self.ownerID).child(notificationID).removeValue(completionBlock: { (error, ref) in
+                    //А затем удаляем информацию из таблицы post-likes и user-likes
+                    POST_LIKES_REF.child(self.postID).removeValue()
+                    USER_LIKES_REF.child(userID).child(self.postID).removeValue()
+                })
+            })
+        }
+        
+        //Удаляем оставшиеся уведомления связанные с удаляемым постом
+        deleteNotificationAssociatedWithDeletedPost(userID: currentUserID)
+        
+        //Получаем слова описания поста
+        let words = description.components(separatedBy: .whitespacesAndNewlines)
+        
+        for var word in words {
+            //Если в нем найден хэштег
+            if word.hasPrefix("#") {
+                word = word.trimmingCharacters(in: .punctuationCharacters)
+                word = word.trimmingCharacters(in: .symbols)
+                //То удаляем его из таблицы хештегов
+                HASHTAG_POST_REF.child(word.lowercased()).child(postID).removeValue()
+            }
+        }
+        //Удаляем комментарии ассоциированные с постом
+        COMMENTS_REF.child(postID).removeValue()
+        //Удаляем сам пост
+        POSTS_REF.child(postID).removeValue()
+    }
+    
+    ///Удаляет все уведомления связанные с удаляемым постом у пользователя
+    /// - Parameters:
+    ///     - userID: Идентификатор пользователя у которого удаляем уведомления
+    private func deleteNotificationAssociatedWithDeletedPost(userID: String){
+        
+        NOTIFICATONS_REF.child(userID).observe(.childAdded) { (dataFromDB) in
+            let notificationID = dataFromDB.key
+            //Получаем данные связанные с этим уведомлением
+            guard let dictionary = dataFromDB.value as? Dictionary<String, AnyObject>,
+                let postID = dictionary["postID"] as? String else {return}
+            //Если это уведомление связано с удаляемым постом, то удаляем это уведомление
+            if self.postID == postID {
+                NOTIFICATONS_REF.child(userID).child(notificationID).removeValue()
             }
         }
     }

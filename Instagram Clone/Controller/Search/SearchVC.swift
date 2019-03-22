@@ -44,6 +44,11 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
         //64 слева, потому что размер аватарки 48, и плюс по 8 с двух краев для симметрии
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 64, bottom: 0, right: 0)
         
+        //Настраиваем контроль обновления ленты
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+        
         configureSearchBar()
         
         configureCollectionView()
@@ -212,6 +217,8 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
                 guard let first = dataFromDB.children.allObjects.first as? DataSnapshot,
                     let allObjects = dataFromDB.children.allObjects as? [DataSnapshot] else {return}
                 
+                self.tableView.refreshControl?.endRefreshing()
+                
                 allObjects.forEach({ (data) in
                     let postID = data.key
                     self.fetchPost(with: postID)
@@ -261,6 +268,16 @@ class SearchVC: UITableViewController, UISearchBarDelegate {
             self.users.append(user)
             self.tableView.reloadData()
         }
+    }
+    
+    // MARK: - Вспомогательные функции
+    
+    ///Обновляем данные экрана
+    @objc public func handleRefresh() {
+        posts.removeAll()
+        lastLoadPostID = nil
+        fetchPosts()
+        collectionView.reloadData()
     }
 
 }
