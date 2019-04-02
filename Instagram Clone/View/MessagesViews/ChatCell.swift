@@ -47,11 +47,13 @@ class ChatCell: UICollectionViewCell {
     ///Текст сообщения
     let messageView: UITextView = {
         let textView = UITextView()
-        textView.text = "Some test text for messages from me"
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.backgroundColor = .clear
         textView.textColor = .white
         textView.isEditable = false
+        //Если этого не сделать, то у textView у его UITextContainerView размер будет отличаться от размера самого textView. Это можно увидеть в дебагинге пользовательского интерфейса
+        textView.isScrollEnabled = false
+
         //Если вы хотите использовать автоматическую компоновку для ДИНАМИЧЕСКОГО расчета размера и позиции вашего представления, вы должны установить для этого свойства значение false, а затем предоставить не двусмысленный, не конфликтующий набор ограничений для представления.
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
@@ -106,10 +108,15 @@ class ChatCell: UICollectionViewCell {
         bubbleView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         
         messageView.leftAnchor.constraint(equalTo: bubbleView.leftAnchor, constant: 8).isActive = true
-        messageView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+//        messageView.topAnchor.constraint(equalTo: topAnchor, constant: 8).isActive = true
+//        messageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8).isActive = true
+        messageView.centerYAnchor.constraint(equalTo: bubbleView.centerYAnchor).isActive = true
         messageView.rightAnchor.constraint(equalTo: bubbleView.rightAnchor).isActive = true
-        messageView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
+        messageView.heightAnchor.constraint(equalTo: bubbleView.heightAnchor).isActive = true
+        
     }
+    
+    
     
     // MARK: - Обработка нажатия кнопок
     

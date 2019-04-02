@@ -57,13 +57,3 @@ extension UIView {
     }
     
 }
-
-//Для корректного отображения поля ввода текста над клавиатурой
-class MessageView: UIView {
-    
-    //Это необходимо для того, чтобы inputAccesoryView был правильно подобран из ограничений авторазметки
-    
-    override var intrinsicContentSize: CGSize {
-        return CGSize.zero
-    }
-}

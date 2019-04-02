@@ -47,7 +47,7 @@ class Message {
     
     ///Получает данные о пользователе с которым идет переписка
     /// - Returns:
-    ///     Возвращаемое значение
+    ///     Возвращает идентификатор пользователя
     public func getChatPartnerData() -> String {
         
         guard let currentUserID = Auth.auth().currentUser?.uid else {return ""}
@@ -56,7 +56,7 @@ class Message {
         if fromUserID == currentUserID {
             return toUserID
         }
-        //Если отправил сообщение другой пользователь, то мы получаем информацию от кого оно пришло
+        //Если отправил сообщение не текущий пользователь, то мы получаем информацию от кого оно пришло
         else {
             return fromUserID
         }

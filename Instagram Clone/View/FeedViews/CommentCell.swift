@@ -30,7 +30,7 @@ class CommentCell: UICollectionViewCell {
     }
 
     ///Аватар пользователя
-    let profileImageView: CustomImageView = {
+    private let profileImageView: CustomImageView = {
         let image = CustomImageView()
         image.contentMode = .scaleAspectFill
         image.clipsToBounds = true

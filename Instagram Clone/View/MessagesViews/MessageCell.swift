@@ -45,7 +45,6 @@ class MessageCell: UITableViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = .darkGray
-        label.text = "2 ч"
         
         return label
     }()
@@ -79,9 +78,7 @@ class MessageCell: UITableViewCell {
         
         detailTextLabel?.setPosition(top: textLabel?.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: timeLabel.leftAnchor, paddingTop: 3, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
         
-        textLabel?.text = "Joker"
-        
-        detailTextLabel?.text = "Сообщение"
+        textLabel?.text = " "
         
     }
     

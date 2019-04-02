@@ -99,7 +99,8 @@ class MessagesVC: UITableViewController {
                 let messageID = data.key
                 Database.loadMessage(with: messageID, completion: { (message) in
                     
-                    //С помощью словаря избегаем дублирования диалоговых сессий
+                    //С помощью словаря избегаем дублирования диалоговых сессий при появлении нового сообщения
+                    //Обновится лишь последнее сообщение в диалоге
                     self.lastDialogSessionMessages[message.getChatPartnerData()] = message
                     self.dialogs = Array(self.lastDialogSessionMessages.values)
                     self.tableView.reloadData()

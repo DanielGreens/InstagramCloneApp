@@ -21,48 +21,15 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     var messages = [Message]()
     
     ///Контейнер для поля ввода над клавиатурой
-    lazy var containerView: MessageView = {
+    lazy var containerView: InputAccesoryView = {
         
-        let containerView = MessageView()
-        containerView.frame = CGRect(x: 0, y: 0, width: 150, height: 150)
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        let containerView = InputAccesoryView(frame: frame)
         containerView.backgroundColor = UIColor.groupTableViewBackground
-        
         containerView.autoresizingMask = .flexibleHeight
-        
-        //Кнопка отправки
-        containerView.addSubview(sendMessageButton)
-        sendMessageButton.setPosition(top: nil, left: nil, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 44, height: 0)
-        sendMessageButton.centerYAnchor.constraint(equalTo: containerView.layoutMarginsGuide.centerYAnchor).isActive = true
-        
-        //Текстовое поле
-        containerView.addSubview(messageTextField)
-        messageTextField.setPosition(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.layoutMarginsGuide.bottomAnchor, right: sendMessageButton.leftAnchor, paddingTop: 8, paddingLeft: 8, paddingBottom: 8, paddingRight: 8, width: 0, height: 0)
-        
-        //Разделитель
-        let separatorView = UIView()
-        separatorView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        containerView.addSubview(separatorView)
-        separatorView.setPosition(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
+        containerView.delegate = self
         
         return containerView
-    }()
-    
-    ///Поле ввода сообщения
-    let messageTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Новое сообщение"
-        textField.font = UIFont.systemFont(ofSize: 14)
-        textField.borderStyle = .roundedRect
-        return textField
-    }()
-    
-    ///Кнопка отправки сообщения
-    lazy var sendMessageButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "send2"), for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(handleTapSendMessage), for: .touchUpInside)
-        return button
     }()
     
     ///Это свойство обычно используется для присоединения вспомогательного вида к предоставленной системой клавиатуре, которая представлена для объектов UITextField и UITextView.
@@ -203,32 +170,6 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     // MARK: - Работа с БД
     
-    ///Отправляет сообщение на сервер
-    private func sendMessage() {
-        
-        guard let messageText = messageTextField.text,
-              let currentUserID = Auth.auth().currentUser?.uid,
-              let user = self.user else {return}
-        let creationDate = Int(NSDate().timeIntervalSince1970)
-        
-        let messageValues = ["message" : messageText,
-                             "fromUserID" : currentUserID,
-                             "toUserID" : user.userID,
-                             "creationDate" : creationDate] as Dictionary<String, Any>
-        
-        let messageRef = MESSAGES_REF.childByAutoId()
-        
-        guard let uniqueMessageID = messageRef.key else {return}
-        
-        //Добавляем данные в таблицу messages
-        messageRef.updateChildValues(messageValues)
-        
-        //Добавляем данные в таблицу user-messages
-        USER_MESSAGES_REF.child(currentUserID).child(user.userID).updateChildValues([uniqueMessageID : 1])
-        
-        USER_MESSAGES_REF.child(user.userID).child(currentUserID).updateChildValues([uniqueMessageID : 1])
-    }
-    
     ///Загружает сессию диалога с выбранным пользователем
     private func fetchMessages() {
         
@@ -253,17 +194,42 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         print("Info")
     }
     
-    ///Отправляет сообщение на сервер
-    @objc private func handleTapSendMessage() {
-        sendMessage()
-        
-        messageTextField.text = nil
-    }
-    
     ///Открывает экран пользователя
     @objc private func handleTapGoToUserProfile() {
         let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
         userProfileVC.user = user
         navigationController?.pushViewController(userProfileVC, animated: true)
+    }
+}
+
+// MARK: - InputAccsesoryViewDelegate
+
+extension ChatVC : InputAccsesoryViewDelegate {
+    
+    ///Отправляет сообщение на сервер
+    func handleSendButton(forText text: String) {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid,
+              let user = self.user else {return}
+        let creationDate = Int(NSDate().timeIntervalSince1970)
+        
+        let messageValues = ["message" : text,
+                             "fromUserID" : currentUserID,
+                             "toUserID" : user.userID,
+                             "creationDate" : creationDate] as Dictionary<String, Any>
+        
+        let messageRef = MESSAGES_REF.childByAutoId()
+        
+        guard let uniqueMessageID = messageRef.key else {return}
+        
+        //Добавляем данные в таблицу messages
+        messageRef.updateChildValues(messageValues)
+        
+        //Добавляем данные в таблицу user-messages
+        USER_MESSAGES_REF.child(currentUserID).child(user.userID).updateChildValues([uniqueMessageID : 1])
+        
+        USER_MESSAGES_REF.child(user.userID).child(currentUserID).updateChildValues([uniqueMessageID : 1])
+        
+        self.containerView.clearCommentTextView()
     }
 }

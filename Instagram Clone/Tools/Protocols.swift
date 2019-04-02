@@ -71,3 +71,11 @@ protocol NotificationCellDelegate {
     ///     - cell: Класс для которого обрабатывается нажатие
     func handleTapPost(for cell: NotificationCell)
 }
+
+protocol InputAccsesoryViewDelegate {
+    
+    ///Отправляет набранный пользователем текст на сервер
+    /// - Parameters:
+    ///     - text: Текст комментария
+    func handleSendButton(forText text: String)
+}

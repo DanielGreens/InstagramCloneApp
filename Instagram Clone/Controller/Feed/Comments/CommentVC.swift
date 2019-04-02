@@ -21,40 +21,15 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
     var comments = [Comment]()
     
     ///Контейнер для набора комментария
-    lazy var containerView: UIView = {
-        let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 50)
-        containerView.backgroundColor = .white
+    lazy var containerView: InputAccesoryView = {
         
-        containerView.addSubview(commentTextField)
-        containerView.addSubview(postButton)
-        commentTextField.setPosition(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: postButton.leftAnchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        let containerView = InputAccesoryView(frame: frame)
+        containerView.backgroundColor = UIColor.groupTableViewBackground
+        containerView.autoresizingMask = .flexibleHeight
+        containerView.delegate = self
         
-        postButton.setPosition(top: nil, left: nil, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        postButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        let separatorView = UIView()
-        separatorView.backgroundColor = UIColor(red: 230/255, green: 230/255, blue: 230/255, alpha: 1)
-        containerView.addSubview(separatorView)
-        separatorView.setPosition(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
         return containerView
-    }()
-    
-    ///Текстовое поля для написания комментария
-    let commentTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Введите комментарий"
-        textField.font = UIFont.systemFont(ofSize: 14)
-        return textField
-    }()
-    
-    ///Кнопка публикации комменатрия
-    lazy var postButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(named: "send2"), for: .normal)
-        button.tintColor = .black
-        button.addTarget(self, action: #selector(handleUploadComment), for: .touchUpInside)
-        return button
     }()
     
     override func viewDidLoad() {
@@ -183,29 +158,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
     }
     
-    
-    
-    
     // MARK: - Обработка нажатия кнопок
-    
-    @objc func handleUploadComment() {
-        
-        guard let commentText = commentTextField.text, let currentUserID = Auth.auth().currentUser?.uid, let postID = post?.postID else {return}
-        let creationDate = Int(NSDate().timeIntervalSince1970)
-        
-        let values = ["commentText": commentText,
-                      "creationDate" : creationDate,
-                      "userID" : currentUserID] as [String : Any]
-        
-        COMMENTS_REF.child(postID).childByAutoId().updateChildValues(values) { (error, ref) in
-            self.uploadCommentNotificationToServer()
-            //Если текст комментария содержит @, то создаем уведомление об упоминании пользователя
-            if commentText.contains("@") {
-                self.uploadMentionsNotification(for: postID, with: commentText, notificationType: .CommentMention)
-            }
-            self.commentTextField.text = nil
-        }
-    }
     
     ///Нажат хэштег в комментариях
     func handleTapHashtag(for cell: CommentCell) {
@@ -223,5 +176,32 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         cell.commentLabel.handleMentionTap { (mention) in
             self.getMentionedUser(with: mention)
         }
+    }
+}
+
+// MARK: - InputAccsesoryViewDelegate
+
+extension CommentVC : InputAccsesoryViewDelegate {
+    
+    //Публикация комментария
+    func handleSendButton(forText text: String) {
+        
+        guard let currentUserID = Auth.auth().currentUser?.uid,
+              let postID = post?.postID else {return}
+        let creationDate = Int(NSDate().timeIntervalSince1970)
+        
+        let values = ["commentText": text,
+                      "creationDate" : creationDate,
+                      "userID" : currentUserID] as [String : Any]
+        
+        COMMENTS_REF.child(postID).childByAutoId().updateChildValues(values) { (error, ref) in
+            self.uploadCommentNotificationToServer()
+            //Если текст комментария содержит @, то создаем уведомление об упоминании пользователя
+            if text.contains("@") {
+                self.uploadMentionsNotification(for: postID, with: text, notificationType: .CommentMention)
+            }
+        }
+        
+        self.containerView.clearCommentTextView()
     }
 }
