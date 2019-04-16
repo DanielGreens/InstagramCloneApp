@@ -47,6 +47,7 @@ class NotificationCell: UITableViewCell {
     let notificationLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 3
+        label.translatesAutoresizingMaskIntoConstraints = false
         
         return label
     }()
@@ -76,12 +77,15 @@ class NotificationCell: UITableViewCell {
         return image
     }()
     
+    private var paddingRightConstraint: NSLayoutConstraint!
+    
     // MARK: - Инициализаторы
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         configureViewComponents()
+        paddingRightConstraint = notificationLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0)
         
         selectionStyle = .none
     }
@@ -119,20 +123,28 @@ class NotificationCell: UITableViewCell {
         guard let notification = notification,
               let user = notification.user else {return}
         
-        var anchor: NSLayoutXAxisAnchor!
-        
         //notification.type = все кроме подписки нового пользователя
         if notification.type != .Follow {
-            addSubview(postImageView)
-            postImageView.setPosition(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 40, height: 40)
-            postImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            anchor = postImageView.leftAnchor
+            //Если ограничения для ячейки еще не созданы, то создаем их, иначе новые не создавать
+            //Эта проверка нужна, так как мы создаем эти ограничения не из инициализатора, а после того как мы установим данные в свойство notification и этот метод будет вызывать большое количество раз так как все ячейки в collectionView переиспользуемые, рано или поздно будет конфликт ограничений, и их будет огромное количетсво
+            if postImageView.constraints.count < 1 {
+                addSubview(postImageView)
+                postImageView.setPosition(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 40, height: 40)
+                postImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            }
+            followButton.isHidden = true
+            postImageView.isHidden = false
         }
         else {
-            addSubview(followButton)
-            followButton.setPosition(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 120, height: 30)
-            followButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            anchor = followButton.leftAnchor
+            if followButton.constraints.count < 1 {
+                addSubview(followButton)
+                followButton.setPosition(top: nil, left: nil, bottom: nil, right: rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 120, height: 30)
+                followButton.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            }
+            //Чтобы кнопка и фото не появлялись одновременно
+
+            followButton.isHidden = false
+            postImageView.isHidden = true
             
             user.checkIfUserIsFollowed { (result) in
                 
@@ -152,9 +164,21 @@ class NotificationCell: UITableViewCell {
             }
         }
         
-        addSubview(notificationLabel)
-        notificationLabel.setPosition(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: anchor, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        notificationLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        if notificationLabel.constraints.count < 1 {
+            addSubview(notificationLabel)
+            notificationLabel.setPosition(top: nil, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+            notificationLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+            paddingRightConstraint.isActive = true
+        }
+        
+        //В итоге, вместо создания новых ограничений, мы просто будем менять значение константы у ограничения для отступа либо от кнопки либо от икноки фотографии для текста уведомления
+        //В зависимости от того что нужно отобразить подсчитываем отсуп от правого края для текста уведомления
+        if postImageView.isHidden {
+            paddingRightConstraint.constant = -128
+        }
+        else{
+            paddingRightConstraint.constant = -48
+        }
     }
     
     ///Возвращает дату когда данный пост был опубликован в определенном формате

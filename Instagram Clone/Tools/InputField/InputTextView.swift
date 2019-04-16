@@ -16,7 +16,7 @@ class InputTextView: UITextView, UITextViewDelegate {
     ///Плейсхолдер для commentTextView "Введите комменатрий"
     let placeHolder: UILabel = {
         let label = UILabel()
-        label.text = "Введите комментарий"
+        label.text = "Введите текст"
         label.textColor = .lightGray
         return label
     }()
@@ -48,6 +48,11 @@ class InputTextView: UITextView, UITextViewDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        print("DeInit")
+        NotificationCenter.default.removeObserver(self, name: UITextView.textDidChangeNotification, object: nil)
     }
     
     //Этот метод вызывается каждый раз когда система понимает что нужно перерисовать какой либо объект

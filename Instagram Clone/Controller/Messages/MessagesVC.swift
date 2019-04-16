@@ -102,7 +102,10 @@ class MessagesVC: UITableViewController {
                     //С помощью словаря избегаем дублирования диалоговых сессий при появлении нового сообщения
                     //Обновится лишь последнее сообщение в диалоге
                     self.lastDialogSessionMessages[message.getChatPartnerData()] = message
-                    self.dialogs = Array(self.lastDialogSessionMessages.values)
+                    //Берем массив последних сообщений в сессии, и сортируем их так, что новое сообщение будет сверху
+                    self.dialogs = Array(self.lastDialogSessionMessages.values.sorted(by: { (mes1, mes2) -> Bool in
+                        return mes1.creationDate > mes2.creationDate
+                    }))
                     self.tableView.reloadData()
                 })
             })

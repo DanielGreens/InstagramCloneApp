@@ -116,10 +116,4 @@ class ChatCell: UICollectionViewCell {
         
     }
     
-    
-    
-    // MARK: - Обработка нажатия кнопок
-    
-    
-    
 }

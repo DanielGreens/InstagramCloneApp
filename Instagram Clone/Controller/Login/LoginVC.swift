@@ -35,7 +35,7 @@ class LoginVC: UIViewController {
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.autocapitalizationType = .none
         textField.keyboardType = .emailAddress
-        textField.text = "tonystark@mail.ru"
+//        textField.text = "tonystark@mail.ru"
         
         textField.addTarget(self, action: #selector(dataValidation), for: .editingChanged)
         return textField
@@ -50,7 +50,7 @@ class LoginVC: UIViewController {
         textField.font = UIFont.systemFont(ofSize: 14)
         textField.isSecureTextEntry = true
         textField.autocapitalizationType = .none
-        textField.text = "123456"
+//        textField.text = "123456"
         
         textField.addTarget(self, action: #selector(dataValidation), for: .editingChanged)
         return textField

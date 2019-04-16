@@ -19,11 +19,17 @@ class MessageCell: UITableViewCell {
             guard let messageText = message?.messageText else {return}
             detailTextLabel!.text = messageText
             
+            //Формат Времени 21:35
+//            if let time = message?.creationDate {
+//                let dateFormatter = DateFormatter()
+//                dateFormatter.locale = Locale(identifier: "ru_RU")
+//                dateFormatter.dateFormat = "HH:mm"  //Формат 24 часа, если hh - то формат 12 часов
+//                timeLabel.text = dateFormatter.string(from: time)
+//            }
+            
+            
             if let time = message?.creationDate {
-                let dateFormatter = DateFormatter()
-                dateFormatter.locale = Locale(identifier: "ru_RU")
-                dateFormatter.dateFormat = "HH:mm"  //Формат 24 часа, если hh - то формат 12 часов
-                timeLabel.text = dateFormatter.string(from: time)
+                timeLabel.text = time.getTimeInteval()
             }
             
             configureUserData()
@@ -103,7 +109,4 @@ class MessageCell: UITableViewCell {
         }
         
     }
-    
-    
-    // MARK: - Обработка нажатия кнопок
 }

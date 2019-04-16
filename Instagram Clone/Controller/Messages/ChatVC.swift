@@ -65,12 +65,20 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         super.viewWillAppear(animated)
         
         tabBarController?.tabBar.isHidden = true
+        
+        //Добавляем наблюдателя за изменением рамки клавиатуры
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
         tabBarController?.tabBar.isHidden = false
+        
+        //Удаляем наблюдателя за изменением рамки клавиатуры и наблюдателя за изменением текста в UITextView
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+        
+        NotificationCenter.default.removeObserver(InputTextView.self, name: UITextView.textDidChangeNotification, object: nil)
     }
     
     // MARK: - UICollectionView
@@ -146,6 +154,10 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         return NSString(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16)], context: nil)
     }
     
+    ///Настраивает отображения сообщения либо слева либо справа, в зависимости от того кому оно принадлежит
+    /// - Parameters:
+    ///     - cell: Ячейка
+    ///     - message: Данные о сообщении
     private func configureMessage(cell: ChatCell, message: Message) {
         guard let currentUserID = Auth.auth().currentUser?.uid else {return}
         let size = calculateFrameForText(message.messageText)
@@ -187,7 +199,7 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         }
     }
     
-    // MARK: - Обработчики нажатий
+    // MARK: - Обработчики событий
     
     ///Кнопка информации
     @objc private func handleTapInfo() {
@@ -199,6 +211,127 @@ class ChatVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
         let userProfileVC = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
         userProfileVC.user = user
         navigationController?.pushViewController(userProfileVC, animated: true)
+    }
+    
+    ///Меняется положение клавиатуры
+    @objc func keyboardWillShow(notification: NSNotification) {
+        //        ссылка на сайт - http://derpturkey.com/maintain-uitableview-scroll-position-with-keyboard-expansion/
+        //        Open Keyboard
+        //        Begin: { Origin: {X: 0, Y: 568}, Size: {W: 320, H: 253}}
+        //        End:   { Origin: {X: 0, Y: 315}, Size: {W: 320, H: 253}}
+        
+        //        Close Keyboard
+        //        Begin: { Origin: {X: 0, Y: 315}, Size: {W: 320, H: 253}}
+        //        End:   { Origin: {X: 0, Y: 568}, Size: {W: 320, H: 253}}
+        
+        //Обрабатываем появление клавиатуры, только если комментарии есть, так как этот метод вызывается в первый раз при первоначальном открытии окна, когда еще ничего не загружено
+        if self.messages.count > 0 {
+            
+            //Начальное положение координат клавиатуры
+            let beginFrame = ((notification as NSNotification).userInfo![UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+            //Конечное положение координат клавиатуры
+            let endFrame = ((notification as NSNotification).userInfo![UIResponder.keyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+            //Если delta > 0, то клавиатура закрывается, если delta < 0, то клавиатура открывается
+            let delta = (endFrame.origin.y - beginFrame.origin.y)
+            
+            //Если клавиатура появляется
+            if delta < 0 {
+                
+                //Эта проверка нужна для закоментированного метода
+                if !isScrolledToBottom(originYOfKeyboard: endFrame.origin.y) {
+                    
+                    //Разница между координатами клавиатуры и высотой содержимого для collectionView
+                    //ЭТО ДЛЯ ЗАКОМЕНИТРОВАННОГО МЕТОДА В БЛОКЕ АНИМАЦИИ
+                    //                    let height = contentOffsetAfterKeyboardAppears(originYOfKeyboard: endFrame.origin.y)
+                    
+                    //Получаем длительность анимации появления клавиатуры
+                    let keyboardAnimationDuration = ((notification as NSNotification).userInfo![UIResponder.keyboardAnimationDurationUserInfoKey] as! Double)
+                    
+                    let animationCurveRawNSN = ((notification as NSNotification).userInfo![UIResponder.keyboardAnimationCurveUserInfoKey]) as? NSNumber
+                    let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIView.AnimationOptions.curveEaseInOut.rawValue
+                    let animationCurve:UIView.AnimationOptions = UIView.AnimationOptions(rawValue: animationCurveRaw)
+                    
+                    UIView.animate(withDuration: keyboardAnimationDuration, delay: 0, options: animationCurve, animations: {
+                        //Закоментированные строки, поднимает содержимое collectionView так же как и в iMessage. Тоесть содержимое идет не вместе с клавиатурой, а немного запаздывая за ней. (Видно в медленной анимации) Для этого решения закомментрировать contentOffset и раскоментировать layoutIfNeeded()
+                        self.view.layoutIfNeeded()
+                        
+                        //При этом решении содержимое collectionView поднимается одновременно с клавиатурой, как в WhatsApp, но в конце движения есть небольшой эффект bounse
+                        //По сути эта строка показывает collectionView какая часть его содержимого должна быть на самом верху. Чтобы посмотреть раскоментировать в completion
+                        //self.collectionView.contentOffset = CGPoint(x: 0, y: height)
+                    }, completion: { (completed:Bool) in
+                        self.scrollCollectionViewToBottom()
+                        //                    let separatorView2 = UIView()
+                        //                    separatorView2.backgroundColor = .blue
+                        //                    self.collectionView.addSubview(separatorView2)
+                        //                    self.collectionView.bringSubviewToFront(separatorView2)
+                        //                    separatorView2.frame = CGRect(x: 0, y: height, width: self.view.frame.width, height: 2)
+                    })
+                }
+                //Когда убираем клавиатуру все возвращается на свои места автоматически
+            }
+        }
+    }
+    
+    // MARK: - Вспомогательные функции
+    
+    ///Метод который возвращает разницу между высотой содержимого collectionView прокручено в самый низ и начальной точкой по оси У, у frame клавиатуры
+    /// - Parameters:
+    ///     - originYOfKeyboard: Высота клавиатуры
+    /// - Returns:
+    ///     Разница между высотами
+    private func contentOffsetAfterKeyboardAppears(originYOfKeyboard: CGFloat) -> CGFloat {
+        
+        if self.messages.count > 0 {
+            
+            //Высота всего содержимого collectionView
+            let height = self.view.bounds.size.height - (self.collectionView.bounds.size.height - self.collectionView.contentSize.height - (self.navigationController?.navigationBar.frame.height)! - UIApplication.shared.statusBarFrame.size.height)
+            
+            //Показывает границу контента colletionView
+            //            let separatorView = UIView()
+            //            separatorView.backgroundColor = .red
+            //            self.view.addSubview(separatorView)
+            //            self.view.bringSubviewToFront(separatorView)
+            //            separatorView.frame = CGRect(x: 0, y: height, width: self.view.frame.width, height: 1)
+            
+            //Показывает верхнюю границу клавиатуры
+            //            let separatorView2 = UIView()
+            //            separatorView2.backgroundColor = .blue
+            //            self.view.addSubview(separatorView2)
+            //            self.view.bringSubviewToFront(separatorView2)
+            //            separatorView2.frame = CGRect(x: 0, y: originYOfKeyboard, width: self.view.frame.width, height: 2)
+            
+            return abs(height - originYOfKeyboard)
+        }
+        
+        return 0
+    }
+    
+    ///Проверяет высоту содержимого для collectionView
+    /// - Parameters:
+    ///     - originYOfKeyboard: Высота клавиатуры
+    /// - Returns:
+    ///     Если высота контента в collectionView ниже чем верхняя точка клавиатуры, то возвращает true, иначе false
+    private func isScrolledToBottom(originYOfKeyboard: CGFloat) -> Bool {
+        
+        if self.messages.count > 0 {
+            
+            //Высота всего содержимого collectionView
+            let height = self.view.bounds.size.height - (self.collectionView.bounds.size.height - self.collectionView.contentSize.height - (self.navigationController?.navigationBar.frame.height)! - UIApplication.shared.statusBarFrame.size.height)
+            
+            return height < originYOfKeyboard
+        }
+        
+        return false
+    }
+    
+    ///Пролистывает коллекцию в самый низ
+    private func scrollCollectionViewToBottom() {
+        let section = 0
+        let lastItemIndex = self.messages.count - 1
+        if lastItemIndex > 0 {
+            let indexPath:NSIndexPath = NSIndexPath.init(item: lastItemIndex, section: section)
+            self.collectionView.scrollToItem(at: indexPath as IndexPath, at: .bottom, animated: true)
+        }
     }
 }
 

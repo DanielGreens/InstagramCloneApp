@@ -279,6 +279,17 @@ extension UserProfileVC : UserProfileHeaderDelegate {
             attributedText.append(NSAttributedString(string: "подписки", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
             header.folowLabel.attributedText = attributedText
         }
+        
+        //Получаем количество публикаций
+        USER_POSTS_REF.child(userID).observeSingleEvent(of: .value) { (dataFromDB) in
+            guard let data = dataFromDB.children.allObjects as? [DataSnapshot] else { return }
+            let postCount = data.count
+            
+            let attributedText = NSMutableAttributedString(string: "\(postCount)\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "публикации", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
+            
+            header.postsLabel.attributedText = attributedText
+        }
     }
 
     func handleTapFollowers(for header: UserProfileHeader) {

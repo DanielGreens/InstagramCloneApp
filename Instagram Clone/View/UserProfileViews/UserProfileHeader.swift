@@ -47,14 +47,10 @@ class UserProfileHeader: UICollectionViewCell {
     }()
     
     ///Количество постов пользователя
-    let postLabel: UILabel = {
+    let postsLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        
-        let attributedText = NSMutableAttributedString(string: "5\n", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 14)])
-        attributedText.append(NSAttributedString(string: "публикации", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 14), NSAttributedString.Key.foregroundColor : UIColor.lightGray]))
-        label.attributedText = attributedText
         
         return label
     }()
@@ -150,7 +146,7 @@ class UserProfileHeader: UICollectionViewCell {
         //nameLabel.centerXAnchor.constraint(equalTo: profileImageView.centerXAnchor).isActive = true
         
         //Устанавливаем надписи
-        let stackView = UIStackView(arrangedSubviews: [postLabel, folowersLabel, folowLabel])
+        let stackView = UIStackView(arrangedSubviews: [postsLabel, folowersLabel, folowLabel])
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
         
@@ -159,7 +155,7 @@ class UserProfileHeader: UICollectionViewCell {
         
         //Устанавливаем кнопку редактирования профиля
         addSubview(editProfileOrFollowButton)
-        editProfileOrFollowButton.setPosition(top: postLabel.bottomAnchor, left: postLabel.leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
+        editProfileOrFollowButton.setPosition(top: postsLabel.bottomAnchor, left: postsLabel.leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: 12, width: 0, height: 30)
         
         configureBottomToolBar()
     }

@@ -234,8 +234,6 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         signUpButton.backgroundColor = UIColor(red: 17/255, green: 154/255, blue: 237/255, alpha: 1)
     }
     
-
-    
     // MARK: - UIImagePickerControllerDelegate
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -256,6 +254,11 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
         plusPhotoButton.contentMode = .scaleAspectFill
         
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        self.view.endEditing(true)
     }
 
 }

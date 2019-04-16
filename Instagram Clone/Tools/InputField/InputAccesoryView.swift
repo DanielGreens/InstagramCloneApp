@@ -16,7 +16,7 @@ class InputAccesoryView: UIView {
     var delegate: InputAccsesoryViewDelegate?
     
     ///Текстовое поля для написания текста
-    private let inputTextView: InputTextView = {
+    public let inputTextView: InputTextView = {
         let textView = InputTextView()
         textView.font = UIFont.systemFont(ofSize: 16)
         textView.isScrollEnabled = false

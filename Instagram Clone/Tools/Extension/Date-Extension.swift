@@ -11,7 +11,7 @@ import Foundation
 ///Отображение времени публикации поста в новостной ленте
 extension Date {
     
-    ///Переводит время с момента публикации поста в человеческий вид
+    ///Переводит время с момента публикации поста в формат  5 СЕКУНД НАЗАД, или 3 ДНЯ НАЗАД и т.д.
     func timeAgoToDisplay() -> String {
         
         //Получаем количество секунд которые прошли с момента публикации поста
@@ -52,5 +52,22 @@ extension Date {
         }
         
         return "\(part) \(unit) НАЗАД"
+    }
+    
+    ///Возвращает дату когда была сделана публикация в формате 5 мин, или 23ч или 2н и т.д.
+    /// - Returns:
+    ///     Возвращает строковой представление даты в заданом формате
+    func getTimeInteval() -> String? {
+        
+        let dateFormatter = DateComponentsFormatter()
+        dateFormatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth]
+        
+        dateFormatter.maximumUnitCount = 1
+        dateFormatter.unitsStyle = .abbreviated
+        
+        let now = Date()
+        let dateToDisplay = dateFormatter.string(from: self, to: now)
+        
+        return dateToDisplay
     }
 }
