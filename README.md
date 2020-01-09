@@ -11,7 +11,7 @@
 
 Приложение начинается с экрана авторизации, где пользователю необходимо ввести свой логин и пароль.
 
- <p align="center"> 
+ <p align="center" width="318" height="551"> 
 <img src="./ReadmeResourses/Login.png">
 </p>
 
