@@ -105,8 +105,9 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
             cell.post = posts[indexPath.item]
         }
         
-        handleTapHashtag(for: cell)
-        handleTapUserMention(for: cell)
+        //Настраиваем обработку событий для ActiveLabel
+        handleTapHashtag(for: cell)     // Что делать если нажат хэштег
+        handleTapUserMention(for: cell) // Что делать если нажато упоминание пользователя
         handleTapUserNameInPostDescription(for: cell)
         
         return cell
@@ -148,6 +149,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout {
                 try Auth.auth().signOut()
                 //Помещяем окно авторизации в корень контроллера навигации
                 let navigationController = UINavigationController(rootViewController: LoginVC())
+                navigationController.modalPresentationStyle = .fullScreen
                 self.present(navigationController, animated: true, completion: nil)
             }
             //Если возникла ошибка

@@ -129,7 +129,7 @@ class Post {
                           "creationDate" : creationDate,
                           "userID" : currentUserID,
                           "type": NotificationType.Like.rawValue,
-                          "postID" : postID] as Dictionary<String, Any>
+                          "postID" : postID!] as Dictionary<String, Any>
             
             //Добавляем созданную информацию в таблицу Notifications
             let notificationRef = NOTIFICATONS_REF.child(self.ownerID).childByAutoId()

@@ -348,7 +348,7 @@ extension ChatVC : InputAccsesoryViewDelegate {
         
         let messageValues = ["message" : text,
                              "fromUserID" : currentUserID,
-                             "toUserID" : user.userID,
+                             "toUserID" : user.userID!,
                              "creationDate" : creationDate] as Dictionary<String, Any>
         
         let messageRef = MESSAGES_REF.childByAutoId()

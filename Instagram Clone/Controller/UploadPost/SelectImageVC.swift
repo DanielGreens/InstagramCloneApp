@@ -69,7 +69,7 @@ class SelectImageVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         if let selectedImage = self.selectedImage {
             
             //Получаем индекс выбранной картинки
-            if let index = self.images.index(of: selectedImage) {
+            if let index = self.images.firstIndex(of: selectedImage) {
                 
                 //Получаем данные о ней
                 let selectedAsset = self.asset[index]

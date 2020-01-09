@@ -25,7 +25,6 @@
 		DC5A469C223FF6D400991636 /* HashtagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A469B223FF6D400991636 /* HashtagCell.swift */; };
 		DC5A469E22403B6900991636 /* UIViewController-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5A469D22403B6900991636 /* UIViewController-Extension.swift */; };
 		DC7571DC22103267005EDFFE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571DB22103267005EDFFE /* AppDelegate.swift */; };
-		DC7571E122103267005EDFFE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571DF22103267005EDFFE /* Main.storyboard */; };
 		DC7571E322103268005EDFFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E222103268005EDFFE /* Assets.xcassets */; };
 		DC7571E622103268005EDFFE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC7571E422103268005EDFFE /* LaunchScreen.storyboard */; };
 		DC7571F4221032D0005EDFFE /* UIView-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7571EE221032D0005EDFFE /* UIView-Extension.swift */; };
@@ -82,7 +81,6 @@
 		DC5A469D22403B6900991636 /* UIViewController-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController-Extension.swift"; sourceTree = "<group>"; };
 		DC7571D822103267005EDFFE /* Instagram Clone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Instagram Clone.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC7571DB22103267005EDFFE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DC7571E022103267005EDFFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DC7571E222103268005EDFFE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DC7571E522103268005EDFFE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DC7571E722103268005EDFFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,7 +113,6 @@
 		DCC346CD2216FE9B0004D591 /* SearchUserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserCell.swift; sourceTree = "<group>"; };
 		DCCF0E492237FA2800F4F55F /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		DCCF0E4C2238FA8E00F4F55F /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		DCCF0E4E2239295500F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		DCCF0E4F2239295600F4F55F /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DCCF0E5022392BEE00F4F55F /* UIButton-Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton-Extension.swift"; sourceTree = "<group>"; };
 		DCCF0E522239635700F4F55F /* SearchPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPostCell.swift; sourceTree = "<group>"; };
@@ -223,7 +220,6 @@
 			isa = PBXGroup;
 			children = (
 				DC7571DB22103267005EDFFE /* AppDelegate.swift */,
-				DC7571DF22103267005EDFFE /* Main.storyboard */,
 				DC7571E222103268005EDFFE /* Assets.xcassets */,
 				DC7571F2221032D0005EDFFE /* Model */,
 				DC7571F3221032D0005EDFFE /* View */,
@@ -291,8 +287,8 @@
 		DC78179F2223FB0E006FAE47 /* UploadPostViews */ = {
 			isa = PBXGroup;
 			children = (
-				DC78179B2223FAA0006FAE47 /* SelectPhotoCell.swift */,
 				DC78179D2223FAE3006FAE47 /* SelectPhotoHeader.swift */,
+				DC78179B2223FAA0006FAE47 /* SelectPhotoCell.swift */,
 			);
 			path = UploadPostViews;
 			sourceTree = "<group>";
@@ -422,6 +418,7 @@
 				TargetAttributes = {
 					DC7571D722103267005EDFFE = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -432,6 +429,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = DC7571CF22103267005EDFFE;
 			productRefGroup = DC7571D922103267005EDFFE /* Products */;
@@ -451,7 +449,6 @@
 				DC7571E622103268005EDFFE /* LaunchScreen.storyboard in Resources */,
 				DC7571F8221033B9005EDFFE /* GoogleService-Info.plist in Resources */,
 				DC7571E322103268005EDFFE /* Assets.xcassets in Resources */,
-				DC7571E122103267005EDFFE /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,15 +567,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		DC7571DF22103267005EDFFE /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				DC7571E022103267005EDFFE /* Base */,
-				DCCF0E4E2239295500F4F55F /* ru */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		DC7571E422103268005EDFFE /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -724,7 +712,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.DanielGreen.Instagram-Clone";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -744,7 +732,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "ru.DanielGreen.Instagram-Clone";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

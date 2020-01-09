@@ -32,7 +32,7 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
     //Создаем анимацию появления ViewController для вкладки SelectImageVC
     func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
         
-        let index = viewControllers?.index(of: viewController)
+        let index = viewControllers?.firstIndex(of: viewController)
         
         if index == 2 {
             let selectImageVC = SelectImageVC(collectionViewLayout: UICollectionViewFlowLayout())
@@ -128,6 +128,7 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
             DispatchQueue.main.async {
                 //Помещяем окно авторизации в корень контроллера навигации
                 let navigationController = UINavigationController(rootViewController: LoginVC())
+                navigationController.modalPresentationStyle = .fullScreen
                 self.present(navigationController, animated: true, completion: nil)
             }
         }
